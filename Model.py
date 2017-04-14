@@ -9,6 +9,7 @@ def print_layershape(layername, inputs, verbose=False):
     :param verbose: Whether we want to print it or not (for simplicity of use)
     :return: -
     """
+    print(type(inputs))
     if verbose:
         print(layername, "\t\t\t\t", str(inputs.get_shape()) )
 
@@ -17,7 +18,7 @@ def init_graph():
     :return:
     """
     W, b = initialize_parameters()
-    build_model(W, b, )
+    build_model(W, b, verbose=True, is_training=True)
 
 
 
@@ -94,15 +95,16 @@ def build_model(W, b, verbose=True, is_training=False):
     """
 
     ## 0.Layer: Input
-    input = tf.placeholder(shape=[16, 8], dtype=tf.float32)
-    inputs = tf.reshape(input, [1, 16, 8, 1]) #must be a 4D input into the CNN layer
+    X_input = tf.placeholder(shape=[16, 8], dtype=tf.float32)
+    y_input = tf.placeholder(shape=[1], dtype=tf.int8)
+    inputs = tf.reshape(X_input, [1, 16, 8, 1]) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
                             center=False,
                             scale=False,
                             is_training=is_training
                         )
-    print_layershape("Input", input, verbose=verbose)
+    print_layershape("Input", inputs, verbose=verbose)
 
 
 
@@ -143,12 +145,13 @@ def build_model(W, b, verbose=True, is_training=False):
 
 
     ## 8. Layer: Softmax, or loss otherwise
-    #Depending on train/evaluate
-    predict = tf.nn.softmax(inputs) if not is_training else None #We can calculate the loss directly if we only train
-
-    #Depending on train/evaluate
+    predict = None
     loss = None
-    #loss = tf.nn.softmax_cross_entropy_with_logits(None, None)
+    if is_training:
+        loss = tf.nn.softmax_cross_entropy_with_logits(logits=predict, labels=y_input)
+    else:
+        predict = tf.nn.softmax(inputs)
+
 
     #TODO: Parameterize the learning rate!
     #TODO: Choose the optimal algorithm to find the optimal function model
