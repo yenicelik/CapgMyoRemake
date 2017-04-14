@@ -31,8 +31,6 @@ def get_data(datapath, verbose=False):
 
     out = []
 
-    dict = sio.loadmat(datapath)
-
     if type(datapath) == type([]):
         for filepath in datapath:
             file = sio.loadmat(filepath)
@@ -42,7 +40,7 @@ def get_data(datapath, verbose=False):
 
     if verbose:
         print("Data dictionary has the keys: ")
-        for key, value in dict.iteritems() :
+        for key, value in out[0].iteritems():
             print(key)
 
 

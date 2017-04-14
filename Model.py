@@ -1,3 +1,4 @@
+from __future__ import print_function
 import tensorflow as tf
 import numpy as np
 from Layers import *
@@ -18,7 +19,18 @@ def init_graph():
     :return:
     """
     W, b = initialize_parameters()
-    build_model(W, b, verbose=True, is_training=True)
+    X_input, y_input, loss, predict, trainer, updateModel = build_model(W, b, verbose=True, is_training=True)
+
+    model_dict = {
+                    "X_input": X_input,
+                    "y_input": y_input,
+                    "loss": loss,
+                    "predict": predict,
+                    "trainer": trainer,
+                    "updateModel": updateModel
+    }
+
+    return W, b, model_dict
 
 
 
@@ -27,24 +39,27 @@ def initialize_parameters():
 
     #TODO: Iteratively check if these are the correct weights!
     Weights = {
-                "W_Conv1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Conv1"),
-                "W_Conv2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Conv2"),
-                "W_Local1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Local1"),
-                "W_Local2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Local2"),
-                "W_Affine1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Affine1"),
-                "W_Affine2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Affine2"),
-                "W_Affine3": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="W_Affine3"),
+                #Is the last number the batch_size? I think it is..
+                "W_Conv1": tf.Variable(tf.random_normal([3, 3, 1, 64], 0.00, 0.01), name="W_Conv1"),
+                "W_Conv2": tf.Variable(tf.random_normal([3, 3, 64, 64], 0.00, 0.01), name="W_Conv2"), #not sure if we sum over all 64 channels?!
+                #TODO: Implement locally connected layer! Currently, we use affine layers instead of locally connected layers!
+                #This layer is terribly wrong!
+                #"W_Local1": tf.Variable(tf.random_normal([16 * 64 * 8, 512], 0.00, 0.01), name="W_Local1"),
+                #"W_Local2": tf.Variable(tf.random_normal([16 * 64 * 8, 512], 0.00, 0.01), name="W_Local2"),
+                "W_Affine1": tf.Variable(tf.random_normal([16*64*8, 512], 0.00, 0.01), name="W_Affine1"),
+                "W_Affine2": tf.Variable(tf.random_normal([512, 128], 0.00, 0.01), name="W_Affine2"),
+                "W_Affine3": tf.Variable(tf.random_normal([128, 32], 0.00, 0.01), name="W_Affine3"),
     }
 
     #TODO: Do local layers have a bias term?
     Bias = {
-                "b_Conv1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Conv1"),
-                "b_Conv2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Conv2"),
-                "b_Local1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Local1"),
-                "b_Local2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Local2"),
-                "b_Affine1": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Affine1"),
-                "b_Affine2": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Affine2"),
-                "b_Affine3": tf.Variable(tf.random_normal([8, 8, 1, 16], 0.00, 0.01), name="b_Affine3")
+                "b_Conv1": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv1"), #this is not correct, as it should be a per-filter weight!!!
+                "b_Conv2": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv2"),
+                #"b_Local1": tf.Variable(tf.random_normal([1, 16, 8, 8], 0.00, 0.01), name="b_Local1"),
+                #"b_Local2": tf.Variable(tf.random_normal([1, 16, 8, 8], 0.00, 0.01), name="b_Local2"),
+                "b_Affine1": tf.Variable(tf.random_normal([1, 512], 0.00, 0.01), name="b_Affine1"),
+                "b_Affine2": tf.Variable(tf.random_normal([1, 128], 0.00, 0.01), name="b_Affine2"),
+                "b_Affine3": tf.Variable(tf.random_normal([1, 32], 0.00, 0.01), name="b_Affine3")
     }
 
     return Weights, Bias
@@ -95,8 +110,9 @@ def build_model(W, b, verbose=True, is_training=False):
     """
 
     ## 0.Layer: Input
+    #TODO: Input None into the shape; also, input the time-window into the shape!
     X_input = tf.placeholder(shape=[16, 8], dtype=tf.float32)
-    y_input = tf.placeholder(shape=[1], dtype=tf.int8)
+    y_input = tf.placeholder(shape=[32], dtype=tf.int8)
     inputs = tf.reshape(X_input, [1, 16, 8, 1]) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
@@ -118,47 +134,45 @@ def build_model(W, b, verbose=True, is_training=False):
 
 
 
-    ## 3. Layer: Locally connected 1
-    inputs = layer_locally_connected(inputs, W['W_Local1'], b['b_Local1'], is_training)
-    print_layershape("Local1", inputs, verbose=verbose)
-
-    ## 4. Layer: Locally connected 2
-    layer_locally_connected(inputs, W['W_Local2'], b['b_Local2'], is_training)
-    inputs = tf.nn.dropout(inputs, 0.5)
-    print_layershape("Local2", inputs, verbose=verbose)
+    #TODO: Implement locally connected layer! Currently, we use affine layers instead of locally connected layers!
+    # ## 3. Layer: Locally connected 1
+    # inputs = layer_affine(inputs, W['W_Local1'], b['b_Local1'], is_training)
+    # print_layershape("Local1", inputs, verbose=verbose)
+    #
+    # ## 4. Layer: Locally connected 2
+    # inputs = layer_affine(inputs, W['W_Local2'], b['b_Local2'], is_training)
+    # inputs = tf.nn.dropout(inputs, 0.5)
+    # print_layershape("Local2", inputs, verbose=verbose)
 
 
 
     ## 5. Layer: Affine 1 (512 units)
+    inputs = tf.reshape(inputs, (1, 16 * 8 * 64))
     inputs = layer_affine(inputs, W['W_Affine1'], b['b_Affine1'], is_training)
     inputs = tf.nn.dropout(inputs, 0.5)
     print_layershape("Affine1", inputs, verbose=verbose)
 
     ## 6. Layer: Affine 2 (512 units)
-    inputs = layer_affine(inputs, W['W_Affine2'], b['b_Affine2'])
+    inputs = layer_affine(inputs, W['W_Affine2'], b['b_Affine2'], is_training)
     inputs = tf.nn.dropout(inputs, 0.5)
     print_layershape("Affine2", inputs, verbose=verbose)
 
     ## 7. Layer: Affine 3 (128 units)
-    inputs = layer_affine(inputs, W['W_Affine3'], b['b_Affine3'])
+    inputs = layer_affine(inputs, W['W_Affine3'], b['b_Affine3'], is_training)
     print_layershape("Affine3", inputs, verbose=verbose)
 
 
     ## 8. Layer: Softmax, or loss otherwise
-    predict = None
-    loss = None
-    if is_training:
-        loss = tf.nn.softmax_cross_entropy_with_logits(logits=predict, labels=y_input)
-    else:
-        predict = tf.nn.softmax(inputs)
+    predict = tf.nn.softmax(inputs) #should be an argmax, or should this even go through
 
+    loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
 
     #TODO: Parameterize the learning rate!
     #TODO: Choose the optimal algorithm to find the optimal function model
-    trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1)
+    trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam
     updateModel = trainer.minimize(loss)
 
 
     #We must return 'references' to the individual objects
-    return input, loss, predict, trainer, updateModel
+    return X_input, y_input, loss, predict, trainer, updateModel
 
