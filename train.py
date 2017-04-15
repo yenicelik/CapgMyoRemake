@@ -22,7 +22,7 @@ parameter is a dictionary consisting of
 #TODO: Epoch == Full pass through the data
 #TODO: the model should be saved on the harddrive frequently!
 
-def train(parameter, model_dict, X, y):
+def train(sess, parameter, model_dict, X, y):
     """ Trains the network to the given environment. Saves weights to saver
         In: parameter (Dictionary with settings)
         In: saver (tf.saver where weights and bias will be saved to)
@@ -32,39 +32,33 @@ def train(parameter, model_dict, X, y):
         Out: steps_list (number of steps 'survived' in given episode)
     """
 
+    for epoch in xrange(parameter['NUM_EPOCHS']):
 
-    init = tf.initialize_all_variables()
+        loss_list = []
 
-    with tf.Session() as sess:
-        sess.run(init)
+        start_time = datetime.datetime.now()
 
-        for epoch in xrange(parameter['NUM_EPOCHS']):
+        loss = run_epoch(
+                            cur_epoch=epoch,
+                            sess=sess,
+                            parameter=parameter,
+                            model_dict=model_dict,
+                            X=X,
+                            y=y
+        )
 
-            loss_list = []
+        end_time = datetime.datetime.now()
+        total_time = end_time - start_time
 
-            start_time = datetime.datetime.now()
+        loss_list.extend(loss)
 
-            loss = run_epoch(
-                                cur_epoch=epoch,
-                                sess=sess,
-                                parameter=parameter,
-                                model_dict=model_dict,
-                                X=X,
-                                y=y
-            )
+        percentage = float(epoch) / parameter['NUM_EPOCHS']
 
-            end_time = datetime.datetime.now()
-            total_time = end_time - start_time
-
-            loss_list.extend(loss)
-
-            percentage = float(epoch) / parameter['NUM_EPOCHS']
-
-            print("Progress: {0:.3f}%%".format(percentage * 100))
-            print("EST. time per episode: " + str(total_time))
-            print("Epochs left: {0:d}".format(parameter['NUM_EPOCHS'] - epoch))
-            print("Average loss of current epoch: " + str(np.sum(loss_list)/parameter['NUM_EPOCHS']))
-            print("")
+        print("Progress: {0:.3f}%%".format(percentage * 100))
+        print("EST. time per episode: " + str(total_time))
+        print("Epochs left: {0:d}".format(parameter['NUM_EPOCHS'] - epoch))
+        print("Average loss of current epoch: " + str(np.sum(loss_list)/parameter['NUM_EPOCHS']))
+        print("")
 
     return loss_list
 

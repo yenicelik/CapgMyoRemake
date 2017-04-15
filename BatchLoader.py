@@ -8,7 +8,7 @@ class BatchLoader(object):
         Allows to get batches until an epoch has passed
     """
 
-    def __init__(self, X, y, batch_size, shuffle=False):
+    def __init__(self, X, y, batch_size, shuffle=True):
         """
         :param X: The training data
         :param y: The corresponding labels of the training data
