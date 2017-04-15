@@ -3,6 +3,7 @@ import tensorflow as tf
 from Model import init_graph
 from Importer import *
 from train import train
+from AccuracyTester import *
 
 
 def main():
@@ -23,6 +24,7 @@ def main():
     #                 "updateModel": updateModel
     # }
 
+
     ################################
     # Importing all data
     ################################
@@ -36,20 +38,27 @@ def main():
     print(y.shape)
 
     #for this specific task, we need to get X and y as frames.... as such, it might be wise to do batches of size 1000, let each have a label of y... otherwise, it is not good to input a homogeneous dataset i thinkg
-    X = np.reshape(X, (-1, 16, 8))
-    y = np.reshape(y, (-1, 32))
+    X = np.reshape(X, (-1, 16, 8))[:5000, :, :]
+    y = np.reshape(y, (-1, 32))[:5000, :]
 
     ################################
     # Training on data
     ################################
     parameter = {
-        'NUM_EPOCHS': 3,
-        'BATCH_SIZE': 500
+        'NUM_EPOCHS': 1,
+        'BATCH_SIZE': 5000
     }
 
     train(
                 parameter=parameter,
                 model_dict=model_dict,
+                X=X,
+                y=y
+    )
+
+    test_accuracy(
+                model_dict=model_dict,
+                parameter=parameter,
                 X=X,
                 y=y
     )

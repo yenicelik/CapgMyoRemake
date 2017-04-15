@@ -111,7 +111,8 @@ def build_model(W, b, verbose=True, is_training=False):
     ## 0.Layer: Input
     #TODO: Input None into the shape; also, input the time-window into the shape!
     X_input = tf.placeholder(shape=[None, 16, 8], dtype=tf.float32)
-    y_input = tf.placeholder(shape=[None, 32], dtype=tf.int8)
+    if is_training:
+        y_input = tf.placeholder(shape=[None, 32], dtype=tf.int8)
     inputs = tf.reshape(X_input, (-1, 16, 8, 1)) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
@@ -164,12 +165,16 @@ def build_model(W, b, verbose=True, is_training=False):
     ## 8. Layer: Softmax, or loss otherwise
     predict = tf.nn.softmax(inputs) #should be an argmax, or should this even go through
 
-    loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
+    loss = None
+    trainer = None
+    updateModel = None
 
-    #TODO: Parameterize the learning rate!
-    #TODO: Choose the optimal algorithm to find the optimal function model
-    trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam
-    updateModel = trainer.minimize(loss)
+    if is_training:
+        loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
+        #TODO: Parameterize the learning rate!
+        #TODO: Choose the optimal algorithm to find the optimal function model
+        trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam
+        updateModel = trainer.minimize(loss)
 
 
     #We must return 'references' to the individual objects

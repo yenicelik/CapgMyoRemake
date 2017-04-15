@@ -1,3 +1,4 @@
+from __future__ import print_function
 #External dependencies
 import numpy as np
 import tensorflow as tf
@@ -83,11 +84,7 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y):
 
     epoch_done = False
     while not epoch_done:
-        print("Step")
         X_batch, y_batch, epoch_done = batchLoader.load_batch()
-
-        print("Step progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
-
 
         loss, predict, _ = sess.run(
                         #Describe what we want out of the model
@@ -102,6 +99,9 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y):
                             model_dict['y_input']: y_batch
                         }
                     )
+
+        print("Step progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
+        print("Training Loss: ", np.sum(loss)/batchLoader.batch_size)
 
         loss_list.append(loss/parameter['BATCH_SIZE'])
 
