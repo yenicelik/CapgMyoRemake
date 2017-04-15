@@ -6,10 +6,14 @@ from BatchLoader import BatchLoader
 
 def test_accuracy(model_dict, parameter, X, y):
 
+    print(y)
 
     #TODO: we must somehow find a way to test the accuracy of this model, without necessarily saving the model... Potentially, we could implement this 'test accuracy' as part of the training process (with a CV option)
     #TODO: create a 'predict' function
     init = tf.initialize_all_variables()
+
+
+    print("y: ", y)
 
     with tf.Session() as sess:
         sess.run(init)
@@ -31,10 +35,11 @@ def test_accuracy(model_dict, parameter, X, y):
                         )
 
         predict = np.argmax(logits, axis=1)
+        print("y_batch is: ", y_batch)
         actual = np.argmax(y_batch, axis=1)
 
-        print(predict)
-        print(actual)
+        print("predict is: ", predict)
+        print("actual is: ", actual)
 
         difference = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
         accuracy = (np.sum(difference) / float(X_batch.shape[0]))

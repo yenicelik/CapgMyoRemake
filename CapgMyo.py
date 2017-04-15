@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from Model import init_graph
@@ -38,29 +39,42 @@ def main():
     print(y.shape)
 
     #for this specific task, we need to get X and y as frames.... as such, it might be wise to do batches of size 1000, let each have a label of y... otherwise, it is not good to input a homogeneous dataset i thinkg
-    X = np.reshape(X, (-1, 16, 8))[:5000, :, :]
-    y = np.reshape(y, (-1, 32))[:5000, :]
+    indices = np.arange(X.shape[0] * X.shape[1])
+    np.random.shuffle(indices)
+
+    X = np.reshape(X, (-1, 16, 8))
+    y = np.reshape(y, (-1, 12))
+
+    X_sample = X[indices[:5000], :, :]
+    y_sample = y[indices[:5000], :]
+
+    # print("y_sample: ", y_sample)
+
+
+
+    # for i in 5000:
+    #     print(y_sample)
 
     ################################
     # Training on data
     ################################
     parameter = {
         'NUM_EPOCHS': 1,
-        'BATCH_SIZE': 5000
+        'BATCH_SIZE': 500
     }
 
-    train(
-                parameter=parameter,
-                model_dict=model_dict,
-                X=X,
-                y=y
-    )
+    # train(
+    #             parameter=parameter,
+    #             model_dict=model_dict,
+    #             X=X_sample,
+    #             y=y_sample
+    # )
 
     test_accuracy(
                 model_dict=model_dict,
                 parameter=parameter,
-                X=X,
-                y=y
+                X=X_sample,
+                y=y_sample
     )
 
 

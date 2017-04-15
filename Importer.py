@@ -26,11 +26,14 @@ class Importer(object):
 
         self.y_tmp = self.y_tmp.flatten()
 
-        self.y_tmp[self.y_tmp == 100] = 30
-        self.y_tmp[self.y_tmp == 101] = 31
+        self.y_tmp[self.y_tmp == 100] = 9
+        self.y_tmp[self.y_tmp == 101] = 10
 
-        self.y = np.zeros((self.X.shape[0], 32))
+        self.y = np.zeros((self.X.shape[0], 12))
         self.y[np.arange(self.X.shape[0]), self.y_tmp] = 1
+
+
+        #y is fine!
 
         for i in range(self.X.shape[0]):
             if np.sum(self.y[i]) != 1:
@@ -40,8 +43,10 @@ class Importer(object):
 
 
     def get_trainingset(self):
-        out_y = np.reshape(self.y, (-1, 1, 32))
+        out_y = np.reshape(self.y, (-1, 1, 12))
         out_y = np.repeat(out_y, 1000, axis=1)
+
+        #seems to work aswell!
 
         return self.X, out_y
 

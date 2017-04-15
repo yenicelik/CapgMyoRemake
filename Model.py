@@ -47,7 +47,7 @@ def initialize_parameters():
                 #"W_Local2": tf.Variable(tf.random_normal([16 * 64 * 8, 512], 0.00, 0.01), name="W_Local2"),
                 "W_Affine1": tf.Variable(tf.random_normal([16*64*8, 512], 0.00, 0.01), name="W_Affine1"),
                 "W_Affine2": tf.Variable(tf.random_normal([512, 128], 0.00, 0.01), name="W_Affine2"),
-                "W_Affine3": tf.Variable(tf.random_normal([128, 32], 0.00, 0.01), name="W_Affine3"),
+                "W_Affine3": tf.Variable(tf.random_normal([128, 12], 0.00, 0.01), name="W_Affine3"),
     }
 
     #TODO: Do local layers have a bias term?
@@ -58,7 +58,7 @@ def initialize_parameters():
                 #"b_Local2": tf.Variable(tf.random_normal([1, 16, 8, 8], 0.00, 0.01), name="b_Local2"),
                 "b_Affine1": tf.Variable(tf.random_normal([1, 512], 0.00, 0.01), name="b_Affine1"),
                 "b_Affine2": tf.Variable(tf.random_normal([1, 128], 0.00, 0.01), name="b_Affine2"),
-                "b_Affine3": tf.Variable(tf.random_normal([1, 32], 0.00, 0.01), name="b_Affine3")
+                "b_Affine3": tf.Variable(tf.random_normal([1, 12], 0.00, 0.01), name="b_Affine3")
     }
 
     return Weights, Bias
@@ -112,7 +112,7 @@ def build_model(W, b, verbose=True, is_training=False):
     #TODO: Input None into the shape; also, input the time-window into the shape!
     X_input = tf.placeholder(shape=[None, 16, 8], dtype=tf.float32)
     if is_training:
-        y_input = tf.placeholder(shape=[None, 32], dtype=tf.int8)
+        y_input = tf.placeholder(shape=[None, 12], dtype=tf.int8)
     inputs = tf.reshape(X_input, (-1, 16, 8, 1)) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
