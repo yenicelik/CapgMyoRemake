@@ -8,3 +8,8 @@ def setup_saver(W, b):
     saver = tf.train.Saver(features)
 
     return saver
+
+def to_one_hot(x, dims):
+    out = np.zeros(dims)
+    out[x] = 1
+    return out

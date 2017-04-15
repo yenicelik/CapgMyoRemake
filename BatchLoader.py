@@ -34,6 +34,9 @@ class BatchLoader(object):
             X = X[indices,:]
             y = y[indices]
 
+        print(X.shape)
+        print(y.shape)
+        print(self.number_of_batches)
         self.X_arr = np.split(X, self.number_of_batches, axis=0)
         self.y_arr = np.split(y, self.number_of_batches, axis=0)
 
@@ -48,6 +51,7 @@ class BatchLoader(object):
 
         self.batch_counter += 1
 
+        epoch_passed = False
         if self.batch_counter >= self.number_of_batches:
             epoch_passed = True
             self.batch_counter = self.batch_counter % self.number_of_batches

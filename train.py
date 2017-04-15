@@ -55,12 +55,12 @@ def train(parameter, model_dict, X, y):
 
             loss_list.extend(loss)
 
-            percentage = float(epoch) / parameter['NUM_EPISODES']
+            percentage = float(epoch) / parameter['NUM_EPOCHS']
 
             print("Progress: {0:.3f}%%".format(percentage * 100))
             print("EST. time per episode: " + str(total_time))
             print("Epochs left: {0:d}".format(parameter['NUM_EPOCHS'] - epoch))
-            print("Average loss of current epoch: " + str(sum(loss_list)/parameter['NUM_EPOCHS']) + "%")
+            print("Average loss of current epoch: " + str(np.sum(loss_list)/parameter['NUM_EPOCHS']))
             print("")
 
     return loss_list
@@ -84,12 +84,11 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y):
         X_batch, y_batch, epoch_done = batchLoader.load_batch()
 
 
-        loss = sess.run(
+        loss, predict, _ = sess.run(
                         #Describe what we want out of the model
                         [
                             model_dict['loss'],
                             model_dict['predict'],
-                            model_dict['trainer'],
                             model_dict['updateModel']
                         ],
                         #Describe what we input in the model
@@ -99,7 +98,7 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y):
                         }
                     )
 
-        loss_list.append(loss)
+        loss_list.append(loss/parameter['BATCH_SIZE'])
 
     return loss_list
 

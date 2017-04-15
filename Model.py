@@ -19,14 +19,13 @@ def init_graph():
     :return:
     """
     W, b = initialize_parameters()
-    X_input, y_input, loss, predict, trainer, updateModel = build_model(W, b, verbose=True, is_training=True)
+    X_input, y_input, loss, predict, updateModel = build_model(W, b, verbose=True, is_training=True)
 
     model_dict = {
                     "X_input": X_input,
                     "y_input": y_input,
                     "loss": loss,
                     "predict": predict,
-                    "trainer": trainer,
                     "updateModel": updateModel
     }
 
@@ -111,9 +110,9 @@ def build_model(W, b, verbose=True, is_training=False):
 
     ## 0.Layer: Input
     #TODO: Input None into the shape; also, input the time-window into the shape!
-    X_input = tf.placeholder(shape=[16, 8], dtype=tf.float32)
-    y_input = tf.placeholder(shape=[32], dtype=tf.int8)
-    inputs = tf.reshape(X_input, [1, 16, 8, 1]) #must be a 4D input into the CNN layer
+    X_input = tf.placeholder(shape=[None, 16, 8], dtype=tf.float32)
+    y_input = tf.placeholder(shape=[None, 32], dtype=tf.int8)
+    inputs = tf.reshape(X_input, (-1, 16, 8, 1)) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
                             center=False,
@@ -147,7 +146,7 @@ def build_model(W, b, verbose=True, is_training=False):
 
 
     ## 5. Layer: Affine 1 (512 units)
-    inputs = tf.reshape(inputs, (1, 16 * 8 * 64))
+    inputs = tf.reshape(inputs, (-1, 16 * 8 * 64))
     inputs = layer_affine(inputs, W['W_Affine1'], b['b_Affine1'], is_training)
     inputs = tf.nn.dropout(inputs, 0.5)
     print_layershape("Affine1", inputs, verbose=verbose)
@@ -174,5 +173,5 @@ def build_model(W, b, verbose=True, is_training=False):
 
 
     #We must return 'references' to the individual objects
-    return X_input, y_input, loss, predict, trainer, updateModel
+    return X_input, y_input, loss, predict, updateModel
 
