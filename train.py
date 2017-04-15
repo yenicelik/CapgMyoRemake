@@ -30,7 +30,7 @@ def train(parameter, model_dict, X, y):
         Out: rewards_list (reward for instantenous run)
         Out: steps_list (number of steps 'survived' in given episode)
     """
-    loss_list = []
+
 
     init = tf.initialize_all_variables()
 
@@ -38,6 +38,8 @@ def train(parameter, model_dict, X, y):
         sess.run(init)
 
         for epoch in xrange(parameter['NUM_EPOCHS']):
+
+            loss_list = []
 
             start_time = datetime.datetime.now()
 
@@ -81,7 +83,10 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y):
 
     epoch_done = False
     while not epoch_done:
+        print("Step")
         X_batch, y_batch, epoch_done = batchLoader.load_batch()
+
+        print("Step progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
 
 
         loss, predict, _ = sess.run(

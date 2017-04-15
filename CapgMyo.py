@@ -3,7 +3,6 @@ import tensorflow as tf
 from Model import init_graph
 from Importer import *
 from train import train
-from helper import *
 
 
 def main():
@@ -12,7 +11,7 @@ def main():
     # Initializing TensorFlow Graph
     #################################
 
-    tf.reset_default_graph()
+    tf.global_variables_initializer()
     W, b, model_dict = init_graph()
 
     # model_dict = {
@@ -30,34 +29,22 @@ def main():
 
     #I think we ignore which subjects these are from in the first run..
 
-    data_dirs = get_all_data_dirs("Datasets/Preprocessed/dba-preprocessed-001")
-    data_dict = get_data(data_dirs, verbose=False)
-    X = get_dict_property(data_dict, "data")
-    y = get_dict_property(data_dict, "gesture")
-
-    X = np.asarray(X[0])
-    y = np.asarray(y[0])
-
-    X = np.reshape(X, (-1, 16, 8)) #Assume 1000 is the batch-size now..
-    #X = X[0, :, :]
-    #X = np.reshape(1, 16, 8)
-
+    importerDBA = Importer("Datasets/Preprocessed/DB-a")
+    X, y = importerDBA.get_trainingset()
 
     print(X.shape)
     print(y.shape)
 
-    y = to_one_hot(y, 32)
-    y = np.reshape(y, (1, 32))
-    y = np.repeat(y, X.shape[0], axis=0)
-
+    #for this specific task, we need to get X and y as frames.... as such, it might be wise to do batches of size 1000, let each have a label of y... otherwise, it is not good to input a homogeneous dataset i thinkg
+    X = np.reshape(X, (-1, 16, 8))
+    y = np.reshape(y, (-1, 32))
 
     ################################
     # Training on data
     ################################
-
     parameter = {
-        'NUM_EPOCHS': 1,
-        'BATCH_SIZE': 2
+        'NUM_EPOCHS': 3,
+        'BATCH_SIZE': 500
     }
 
     train(
@@ -67,18 +54,6 @@ def main():
                 y=y
     )
 
-
-
-    # if is_training:
-    #     reward_list, steps_list = train(
-    #                                 env=env,
-    #                                 parameter=parameter,
-    #                                 saver=saver,
-    #                                 forward_dict=forward_dict,
-    #                                 loss_dict=loss_dict
-    #                             )
-    # if is_showoff:
-    #     sample()
 
 
 if __name__ == '__main__':
