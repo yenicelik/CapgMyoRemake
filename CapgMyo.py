@@ -70,14 +70,16 @@ def main():
         X = np.reshape(X, (-1, 16, 8))
         y = np.reshape(y, (-1, 12))
 
-        X_verify = X[:100, :, :]
-        y_verify = y[:100, :]
+        verify_size = 100
+
+        X_verify = X[:verify_size, :, :]
+        y_verify = y[:verify_size, :]
 
         indices = np.arange(X.shape[0])
         np.random.shuffle(indices)
 
-        X_sample = X[indices[:1000], :, :]
-        y_sample = y[indices[:1000], :]
+        X_sample = X[verify_size+indices[:100], :, :]
+        y_sample = y[verify_size+indices[:100], :]
 
         ################################
         # Training on data
