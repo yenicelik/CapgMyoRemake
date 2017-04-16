@@ -19,7 +19,7 @@ def init_graph():
     :return:
     """
     W, b, global_step = initialize_parameters()
-    X_input, y_input, loss, predict, updateModel, global_step = build_model(W, b, global_step, verbose=True, is_training=True)
+    X_input, y_input, loss, predict, updateModel, global_step, keep_prob = build_model(W, b, global_step, verbose=True, is_training=True)
 
     model_dict = {
                     "X_input": X_input,
@@ -27,7 +27,8 @@ def init_graph():
                     "loss": loss,
                     "predict": predict,
                     "updateModel": updateModel,
-                    "globalStepTensor": global_step
+                    "globalStepTensor": global_step,
+                    "keepProb": keep_prob
     }
 
     return W, b, model_dict
@@ -43,12 +44,13 @@ def initialize_parameters():
     Weights = {
                 #Is the last number the batch_size? I think it is..
                 "W_Conv1": tf.Variable(tf.random_normal([3, 3, 1, 64], 0.00, 0.01), name="W_Conv1"),
-                "W_Conv2": tf.Variable(tf.random_normal([3, 3, 64, 64], 0.00, 0.01), name="W_Conv2"), #not sure if we sum over all 64 channels?!
+                "W_Conv2": tf.Variable(tf.random_normal([3, 3, 64, 64], 0.00, 0.01), name="W_Conv2"),
+                #not sure if we sum over all 64 channels?!
                 #TODO: Implement locally connected layer! Currently, we use affine layers instead of locally connected layers!
-                #This layer is terribly wrong!
-                #"W_Local1": tf.Variable(tf.random_normal([16 * 64 * 8, 512], 0.00, 0.01), name="W_Local1"),
-                #"W_Local2": tf.Variable(tf.random_normal([16 * 64 * 8, 512], 0.00, 0.01), name="W_Local2"),
-                "W_Affine1": tf.Variable(tf.random_normal([16*64*8, 512], 0.00, 0.01), name="W_Affine1"),
+                #must be exatly the type of layer that is outputted from the previous layer
+                "W_Local1": tf.Variable(tf.random_normal([1, 16 * 8 * 64], 0.00, 0.01), name="W_Local1"),
+                "W_Local2": tf.Variable(tf.random_normal([1, 16 * 8 * 64], 0.00, 0.01), name="W_Local2"),
+                "W_Affine1": tf.Variable(tf.random_normal([16*8*64, 512], 0.00, 0.01), name="W_Affine1"),
                 "W_Affine2": tf.Variable(tf.random_normal([512, 128], 0.00, 0.01), name="W_Affine2"),
                 "W_Affine3": tf.Variable(tf.random_normal([128, 12], 0.00, 0.01), name="W_Affine3"),
     }
@@ -57,8 +59,9 @@ def initialize_parameters():
     Bias = {
                 "b_Conv1": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv1"), #this is not correct, as it should be a per-filter weight!!!
                 "b_Conv2": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv2"),
-                #"b_Local1": tf.Variable(tf.random_normal([1, 16, 8, 8], 0.00, 0.01), name="b_Local1"),
-                #"b_Local2": tf.Variable(tf.random_normal([1, 16, 8, 8], 0.00, 0.01), name="b_Local2"),
+                #must be exatly the type of layer that is outputted from the previous layer
+                "b_Local1": tf.Variable(tf.random_normal([1, 8192], 0.00, 0.01), name="b_Local1"),
+                "b_Local2": tf.Variable(tf.random_normal([1, 8192], 0.00, 0.01), name="b_Local2"),
                 "b_Affine1": tf.Variable(tf.random_normal([1, 512], 0.00, 0.01), name="b_Affine1"),
                 "b_Affine2": tf.Variable(tf.random_normal([1, 128], 0.00, 0.01), name="b_Affine2"),
                 "b_Affine3": tf.Variable(tf.random_normal([1, 12], 0.00, 0.01), name="b_Affine3")
@@ -110,6 +113,7 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     9: Softmax
 
     """
+    keep_prob = tf.placeholder(tf.float32)
 
     ## 0.Layer: Input
     #TODO: Input None into the shape; also, input the time-window into the shape!
@@ -136,23 +140,23 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     print_layershape("Conv2", inputs, verbose=verbose)
 
 
-
+    #TODO: use dropout only during training!!!
     #TODO: Implement locally connected layer! Currently, we use affine layers instead of locally connected layers!
     # ## 3. Layer: Locally connected 1
-    # inputs = layer_affine(inputs, W['W_Local1'], b['b_Local1'], is_training)
-    # print_layershape("Local1", inputs, verbose=verbose)
-    #
+    inputs = tf.reshape(inputs, (-1, 16 * 8 * 64))
+    inputs = layer_local(inputs, W['W_Local1'], b['b_Local1'], is_training)
+    print_layershape("Local1", inputs, verbose=verbose)
+
     # ## 4. Layer: Locally connected 2
-    # inputs = layer_affine(inputs, W['W_Local2'], b['b_Local2'], is_training)
-    # inputs = tf.nn.dropout(inputs, 0.5)
-    # print_layershape("Local2", inputs, verbose=verbose)
+    inputs = layer_local(inputs, W['W_Local2'], b['b_Local2'], is_training)
+    inputs = tf.nn.dropout(inputs, keep_prob)
+    print_layershape("Local2", inputs, verbose=verbose)
 
 
 
     ## 5. Layer: Affine 1 (512 units)
-    inputs = tf.reshape(inputs, (-1, 16 * 8 * 64))
     inputs = layer_affine(inputs, W['W_Affine1'], b['b_Affine1'], is_training)
-    inputs = tf.nn.dropout(inputs, 0.5)
+    inputs = tf.nn.dropout(inputs, keep_prob)
     print_layershape("Affine1", inputs, verbose=verbose)
 
     ## 6. Layer: Affine 2 (512 units)
@@ -183,5 +187,5 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     increment_global_step = tf.assign(global_step, global_step+1)
 
     #We must return 'references' to the individual objects
-    return X_input, y_input, loss, predict, updateModel, increment_global_step
+    return X_input, y_input, loss, predict, updateModel, increment_global_step, keep_prob
 

@@ -14,14 +14,14 @@ def main():
     # Initializing TensorFlow Graph
     #################################
 
-    restore = True
+    restore = False
 
     parameter = {
-            'NUM_EPOCHS': 2,
+            'NUM_EPOCHS': 1,
             'BATCH_SIZE': 100,
             'BATCHES_PASSED': 0,
             'SAVE_DIR': 'saves/',
-            'SAVE_EVERY': 25 #number of batches after which to save
+            'SAVE_EVERY': 1 #number of batches after which to save
     }
 
     tf.global_variables_initializer()
@@ -70,7 +70,7 @@ def main():
         X = np.reshape(X, (-1, 16, 8))
         y = np.reshape(y, (-1, 12))
 
-        verify_size = 100
+        verify_size = X.shape[0]
 
         X_verify = X[:verify_size, :, :]
         y_verify = y[:verify_size, :]
@@ -78,20 +78,20 @@ def main():
         indices = np.arange(X.shape[0])
         np.random.shuffle(indices)
 
-        X_sample = X[verify_size+indices[:100], :, :]
-        y_sample = y[verify_size+indices[:100], :]
+        X_sample = X[indices[:1000], :, :]
+        y_sample = y[indices[:1000], :]
 
         ################################
         # Training on data
         ################################
-        # train(
-        #             sess=sess,
-        #             parameter=parameter,
-        #             model_dict=model_dict,
-        #             X=X_verify,
-        #             y=y_verify,
-        #             saverObj=saverObj
-        # )
+        train(
+                    sess=sess,
+                    parameter=parameter,
+                    model_dict=model_dict,
+                    X=X_verify,
+                    y=y_verify,
+                    saverObj=saverObj
+        )
 
         test_accuracy(
                     sess=sess,
