@@ -5,6 +5,7 @@ from Model import *
 from Importer import *
 from train import train
 from AccuracyTester import *
+from Saver import *
 
 
 def main():
@@ -13,13 +14,35 @@ def main():
     # Initializing TensorFlow Graph
     #################################
 
+    restore = True
+
+    parameter = {
+            'NUM_EPOCHS': 2,
+            'BATCH_SIZE': 100,
+            'BATCHES_PASSED': 0,
+            'SAVE_DIR': 'saves/',
+            'SAVE_EVERY': 25 #number of batches after which to save
+    }
+
     tf.global_variables_initializer()
     W, b, model_dict = init_graph()
 
-    init = tf.initialize_all_variables()
+
+    saverObj = None
+    if restore:
+        saverObj = Saver(parameter['SAVE_DIR'])
+    else:
+        init = tf.initialize_all_variables()
+        saverObj = Saver(parameter['SAVE_DIR'])
+
 
     with tf.Session() as sess:
-        sess.run(init)
+
+        if restore:
+            saverObj.load_session(sess, parameter['SAVE_DIR']) #Do I need anything else? Like to add the globa stuff etc.?
+            print("Model should be restored now")
+        else:
+            sess.run(init)
 
         # model_dict = {
         #                 "X_input": X_input,
@@ -47,40 +70,34 @@ def main():
         X = np.reshape(X, (-1, 16, 8))
         y = np.reshape(y, (-1, 12))
 
-        X_verify = X[100, :, :]
-        y_verify = y[100, :]
+        X_verify = X[:100, :, :]
+        y_verify = y[:100, :]
 
         indices = np.arange(X.shape[0])
         np.random.shuffle(indices)
 
-        X_sample = X[indices[:10], :]
-        y_sample = y[indices[:10], :]
+        X_sample = X[indices[:1000], :, :]
+        y_sample = y[indices[:1000], :]
 
         ################################
         # Training on data
         ################################
-        parameter = {
-            'NUM_EPOCHS': 1,
-            'BATCH_SIZE': 10
-        }
-
-        print("X_verify: ", X_verify)
-        print("y_verify: ", y_verify)
-
-        train(
-                    sess=sess,
-                    parameter=parameter,
-                    model_dict=model_dict,
-                    X=X_verify,
-                    y=y_verify
-        )
+        # train(
+        #             sess=sess,
+        #             parameter=parameter,
+        #             model_dict=model_dict,
+        #             X=X_verify,
+        #             y=y_verify,
+        #             saverObj=saverObj
+        # )
 
         test_accuracy(
                     sess=sess,
                     model_dict=model_dict,
                     parameter=parameter,
                     X=X_sample,
-                    y=y_sample
+                    y=y_sample,
+
         )
 
 

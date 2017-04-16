@@ -13,8 +13,6 @@ def test_accuracy(sess, model_dict, parameter, X, y):
 
     print("y: ", y)
 
-
-
     batchLoader = BatchLoader(X, y, parameter['BATCH_SIZE'], shuffle=False)
     X_batch, y_batch, epoch_done = batchLoader.load_batch()
 

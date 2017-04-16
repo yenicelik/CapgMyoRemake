@@ -24,6 +24,9 @@ class BatchLoader(object):
 
         #Check if all batches are of equal size
         if self.number_of_batches * self.batch_size != self.X.shape[0]:
+            print("Number of batches: ", self.number_of_batches)
+            print("Batch size: ", self.batch_size)
+            print("Data samples: ", self.X.shape[0])
             print("The data is not divisible by the batch_size!")
             sys.exit(11)
 

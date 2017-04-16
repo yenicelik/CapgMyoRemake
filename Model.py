@@ -18,15 +18,16 @@ def init_graph():
     """
     :return:
     """
-    W, b = initialize_parameters()
-    X_input, y_input, loss, predict, updateModel = build_model(W, b, verbose=True, is_training=True)
+    W, b, global_step = initialize_parameters()
+    X_input, y_input, loss, predict, updateModel, global_step = build_model(W, b, global_step, verbose=True, is_training=True)
 
     model_dict = {
                     "X_input": X_input,
                     "y_input": y_input,
                     "loss": loss,
                     "predict": predict,
-                    "updateModel": updateModel
+                    "updateModel": updateModel,
+                    "globalStepTensor": global_step
     }
 
     return W, b, model_dict
@@ -35,6 +36,8 @@ def init_graph():
 
 def initialize_parameters():
 
+    #Global variable to capture the number of steps made
+    global_step = tf.Variable(1, trainable=False, name='global_step')
 
     #TODO: Iteratively check if these are the correct weights!
     Weights = {
@@ -61,12 +64,12 @@ def initialize_parameters():
                 "b_Affine3": tf.Variable(tf.random_normal([1, 12], 0.00, 0.01), name="b_Affine3")
     }
 
-    return Weights, Bias
+    return Weights, Bias, global_step
 
 
 
 
-def build_model(W, b, verbose=True, is_training=False):
+def build_model(W, b, global_step, verbose=True, is_training=False):
     """
     :param W:
     :param b:
@@ -176,7 +179,9 @@ def build_model(W, b, verbose=True, is_training=False):
         trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam
         updateModel = trainer.minimize(loss)
 
+    #To see how many steps we've been through
+    increment_global_step = tf.assign(global_step, global_step+1)
 
     #We must return 'references' to the individual objects
-    return X_input, y_input, loss, predict, updateModel
+    return X_input, y_input, loss, predict, updateModel, increment_global_step
 
