@@ -1,9 +1,8 @@
-import numpy as np
 import tensorflow as tf
 import os
 
 class Saver(object):
-    """ Handles all saving, including weights and parameters
+    """ Handles saving and loading the trained weights
     """
 
     def __init__(self, save_dir):

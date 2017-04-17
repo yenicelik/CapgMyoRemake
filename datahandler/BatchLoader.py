@@ -1,14 +1,24 @@
+from __future__ import print_function
 import numpy as np
-import tensorflow as tf
 import sys
+
 
 class BatchLoader(object):
     """
-        Takes in training data X with corresponding labels y and a batch_size. Potentially shuffles them.
-        Allows to get batches until an epoch has passed
+        You can create the object, which will create an array of batches, which you can load using the load_batch method. These are directly feed-able to the model.
+        Allows to get batches until an epoch has passed.
     """
 
-    def __init__(self, X, y, batch_size, shuffle=True):
+    def __init__(self, X, y, batch_size, shuffle=True, verbose=True):
+        """
+        Creates an object with an array of batches that can be directly loaded into the tensorflow model
+        :param X: The training data to be split into batches
+        :param y: The corresponding test data to be split into batches
+        :param batch_size: The size of each individual batch
+        :param shuffle: Whether the input data should be shuffled or not. True by default (and highly recommended if training takes place)
+        :param verbose: Whether the shapes of X, y and the number of batches should be printed
+        :return: BatchLoad object
+        """
         """
         :param X: The training data
         :param y: The corresponding labels of the training data
@@ -30,23 +40,25 @@ class BatchLoader(object):
             print("The data is not divisible by the batch_size!")
             sys.exit(11)
 
-        #Potentially shuffle dataset
         if shuffle:
             indices = np.arange(X.shape[0])
             np.random.shuffle(indices)
             X = X[indices,:]
             y = y[indices]
 
-        print(X.shape)
-        print(y.shape)
-        print(self.number_of_batches)
+        if verbose:
+            print("X has shape: ", X.shape)
+            print("y has shape: ", y.shape)
+            print("There are ", self.number_of_batches, " batches, each of size ", self.batch_size)
+
         self.X_arr = np.split(X, self.number_of_batches, axis=0)
         self.y_arr = np.split(y, self.number_of_batches, axis=0)
 
 
     def load_batch(self):
         """
-        :return: A (random) batch of X with the corresponding labels y, and a signal whether one epoch has passed
+        Outputs data that can directly be fed into the model
+        :return: A (random) batch of X with the corresponding labels y, and a signal wether one epoch has passed
         """
 
         outX = self.X_arr[self.batch_counter]
@@ -60,7 +72,6 @@ class BatchLoader(object):
             self.batch_counter = self.batch_counter % self.number_of_batches
 
         return outX, outy, epoch_passed
-
 
 
 

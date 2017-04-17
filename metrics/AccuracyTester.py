@@ -1,15 +1,22 @@
 from __future__ import print_function
-import numpy as np
-import tensorflow as tf
-from BatchLoader import BatchLoader
-from sklearn.metrics import confusion_matrix
-import matplotlib
+
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import confusion_matrix
 
-
+from datahandler.BatchLoader import BatchLoader
 
 
 def test_accuracy(sess, model_dict, parameter, X, y, verbose=False):
+    """
+    :param sess: The tensorflow session that we are going to use.
+    :param model_dict: The model-dictionary that we need to refer to as the tensorflow-graph
+    :param parameter: The parameter dictionary, holding different values needed.
+    :param X: The test-set.
+    :param y: The respective labels of the test-set.
+    :param verbose: Whether the sample prediction and actual y-values should be printed.
+    :return: Nothing
+    """
     plt.interactive(False)
     plt.ion()
     #

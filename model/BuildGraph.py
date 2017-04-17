@@ -1,12 +1,12 @@
 from __future__ import print_function
-import tensorflow as tf
-import numpy as np
-from Layers import *
+
+from model.Layers import *
+
 
 def print_layershape(layername, inputs, verbose=False):
     """
     :param layername: The name of the layer that we currently print
-    :param inptus: The layer object, such that we can extract the shape
+    :param inputs: The layer object, such that we can extract the shape
     :param verbose: Whether we want to print it or not (for simplicity of use)
     :return: -
     """
@@ -14,9 +14,13 @@ def print_layershape(layername, inputs, verbose=False):
     if verbose:
         print(layername, "\t\t\t\t", str(inputs.get_shape()) )
 
-def init_graph():
+#TODO: figure out how to incorporate a is_training variable because once the model is built, this variable cannot be changed. Do we need a tensorflow variable for this?
+#TODO: implement a learning-rate tensorflow variable
+def init_graph(is_training=True, verbose=True):
     """
-    :return:
+    :param is_training: Whether the session we're running is a training session or not.
+    :param verbose:
+    :return: The initized weights-dictionary, bias-dictionary and a model-dictionary that captures all input and output of the created graph.
     """
     W, b, global_step = initialize_parameters()
     X_input, y_input, loss, predict, updateModel, global_step, keep_prob = build_model(W, b, global_step, verbose=True, is_training=True)
@@ -74,11 +78,11 @@ def initialize_parameters():
 
 def build_model(W, b, global_step, verbose=True, is_training=False):
     """
-    :param W:
-    :param b:
-    :param verbose:
-    :param is_training:
-    :return:
+    :param W: The weight dictionary. All dimensions of all weights must match.
+    :param b: The bias dictionary. All dimensions of all weights must match.
+    :param verbose: Whether we want to print out the model-architecture during initialization.
+    :param is_training: Whether this is a training or a testing session. I am pretty sure we should move this as a tensorflow variable now.
+    :return: A reference to X_input, y_input, loss, predict, updateModel, increment_global_step, keep_prob, each being a reference to the respective layer created within the layer (usually a placeholder, loss/predict function or optimizer)
 
     The forward model looks as follows:
     0. Input: (16, 8)
@@ -113,6 +117,7 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     9: Softmax
 
     """
+    #Initialize variables here.
     keep_prob = tf.placeholder(tf.float32)
 
     ## 0.Layer: Input
@@ -130,7 +135,6 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     print_layershape("Input", inputs, verbose=verbose)
 
 
-
     ## 1. Layer: Conv1 (64, stride=1, 3x3)
     inputs = layer_conv(inputs, W['W_Conv1'], b['b_Conv1'], is_training)
     print_layershape("Conv1", inputs, verbose=verbose)
@@ -140,8 +144,6 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     print_layershape("Conv2", inputs, verbose=verbose)
 
 
-    #TODO: use dropout only during training!!!
-    #TODO: Implement locally connected layer! Currently, we use affine layers instead of locally connected layers!
     # ## 3. Layer: Locally connected 1
     inputs = tf.reshape(inputs, (-1, 16 * 8 * 64))
     inputs = layer_local(inputs, W['W_Local1'], b['b_Local1'], is_training)
@@ -172,18 +174,15 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     ## 8. Layer: Softmax, or loss otherwise
     predict = tf.nn.softmax(inputs) #should be an argmax, or should this even go through
 
-    loss = None
-    trainer = None
-    updateModel = None
 
-    if is_training:
-        loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
-        #TODO: Parameterize the learning rate!
-        #TODO: Choose the optimal algorithm to find the optimal function model
-        trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam
-        updateModel = trainer.minimize(loss)
+    ## Output: Loss functions and model trainers
+    loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
+    #TODO: Parameterize the learning rate!
+    #TODO: Choose the optimal algorithm to find the optimal function model
+    trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam maybe?
+    updateModel = trainer.minimize(loss)
 
-    #To see how many steps we've been through
+    #To see how many steps we've been through (this will be saved in-between sessions)
     increment_global_step = tf.assign(global_step, global_step+1)
 
     #We must return 'references' to the individual objects

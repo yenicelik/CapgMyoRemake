@@ -1,17 +1,10 @@
 from __future__ import print_function
 #External dependencies
-import numpy as np
-import tensorflow as tf
-import random
-import sys
-import datetime
-import time
 
 #Project dependencies
-from Model import init_graph
-from Importer import *
-from BatchLoader import BatchLoader
-from Saver import *
+from datahandler.Importer import *
+from datahandler.BatchLoader import BatchLoader
+from datahandler.Saver import *
 
 
 """
