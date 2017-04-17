@@ -104,11 +104,11 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y, saverObj):
                         }
                     )
 
-        print("Step progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
-        print("Training Loss: ", np.sum(loss)/batchLoader.batch_size)
-
         if save_iter % parameter['SAVE_EVERY'] == 0:
             saverObj.save_session(sess, parameter['SAVE_DIR'], tf.train.global_step(sess, global_step_tensor=model_dict['globalStepTensor'])) #step in terms of batches #cur_epoch * batchLoader.number_of_batches + batchLoader.batch_counter
+            print("\nStep progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
+            print("Training Loss: ", np.sum(loss)/batchLoader.batch_size)
+            print("Epoch Progression: ", cur_epoch/float(parameter['NUM_EPOCHS']))
 
         save_iter += 1
 

@@ -2,16 +2,19 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from BatchLoader import BatchLoader
+from sklearn.metrics import confusion_matrix
+import matplotlib
+import matplotlib.pyplot as plt
 
 
-def test_accuracy(sess, model_dict, parameter, X, y):
 
-    print(y)
 
-    #TODO: we must somehow find a way to test the accuracy of this model, without necessarily saving the model... Potentially, we could implement this 'test accuracy' as part of the training process (with a CV option)
-    #TODO: create a 'predict' function
-
-    print("y: ", y)
+def test_accuracy(sess, model_dict, parameter, X, y, verbose=False):
+    plt.interactive(False)
+    plt.ion()
+    #
+    # plt.plot([1, 2, 3])
+    # plt.show()
 
     batchLoader = BatchLoader(X, y, parameter['BATCH_SIZE'], shuffle=False)
     X_batch, y_batch, epoch_done = batchLoader.load_batch()
@@ -31,17 +34,44 @@ def test_accuracy(sess, model_dict, parameter, X, y):
                     )
 
     predict = np.argmax(logits, axis=1)
-    print("y_batch is: ", y_batch)
     actual = np.argmax(y_batch, axis=1)
 
-    print("predict is: ", predict)
-    print("actual is: ", actual)
+    if verbose:
+        print("predict is: ", predict)
+        print("actual is: ", actual)
 
     difference = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
     accuracy = (np.sum(difference) / float(X_batch.shape[0]))
 
+    ##############################
+    # Confusion matrix
+    ##############################
+    cm = confusion_matrix(actual, predict)
+    print(cm)
+
+
     print("Accuracy is: {:.3f}%".format(accuracy*100))
     print("Random baseline: {:.3f}%".format(1./32*100))
+
+    fig, ax = plt.subplots()
+
+    ax.matshow(cm, cmap=plt.cm.Blues)
+    for (i, j), z in np.ndenumerate(cm):
+        ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
+    # Make various adjustments to the plot.
+    # plt.tight_layout()
+    # plt.colorbar()
+    # tick_marks = np.arange(12)
+    # plt.xticks(tick_marks, range(12))
+    # plt.yticks(tick_marks, range(12))
+    # plt.xlabel('Predicted')
+    # plt.ylabel('True')
+    plt.show(block=True)
+
+    # raw_input("Press Enter to continue...")
+
+
+
 
 
 

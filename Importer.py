@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import time
 import datetime
 
+
+#TODO: implement Importer that lets you choose between: Intra-session, Cross-session, Cross-subject
 class Importer(object):
     """ Impoter is responsible for all preprocessing """
 

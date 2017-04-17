@@ -8,20 +8,21 @@ from AccuracyTester import *
 from Saver import *
 
 
+#TODO: Build tensorflow from source (Assembly instruction will make it faster by 3-8 times
 def main():
 
     #################################
     # Initializing TensorFlow Graph
     #################################
 
-    restore = False
+    restore = True
 
     parameter = {
             'NUM_EPOCHS': 1,
             'BATCH_SIZE': 100,
             'BATCHES_PASSED': 0,
             'SAVE_DIR': 'saves/',
-            'SAVE_EVERY': 1 #number of batches after which to save
+            'SAVE_EVERY': 500 #number of batches after which to save
     }
 
     tf.global_variables_initializer()
@@ -84,14 +85,14 @@ def main():
         ################################
         # Training on data
         ################################
-        train(
-                    sess=sess,
-                    parameter=parameter,
-                    model_dict=model_dict,
-                    X=X_verify,
-                    y=y_verify,
-                    saverObj=saverObj
-        )
+        # train(
+        #             sess=sess,
+        #             parameter=parameter,
+        #             model_dict=model_dict,
+        #             X=X_verify,
+        #             y=y_verify,
+        #             saverObj=saverObj
+        # )
 
         test_accuracy(
                     sess=sess,
