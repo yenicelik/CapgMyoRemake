@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix
 from datahandler.BatchLoader import BatchLoader
 
 
-def test_accuracy(sess, model_dict, parameter, X, y, verbose=False):
+def test_accuracy(sess, model_dict, parameter, X, y, verbose=False, show_confusion_matrix=False):
     """
     :param sess: The tensorflow session that we are going to use.
     :param model_dict: The model-dictionary that we need to refer to as the tensorflow-graph
@@ -23,6 +23,7 @@ def test_accuracy(sess, model_dict, parameter, X, y, verbose=False):
     # plt.plot([1, 2, 3])
     # plt.show()
 
+    #TODO: why should the batch_size be specified? I mean, in the end we want the entire X to be tested, right? at least the entire X that was input into this function..
     batchLoader = BatchLoader(X, y, parameter['BATCH_SIZE'], shuffle=False)
     X_batch, y_batch, epoch_done = batchLoader.load_batch()
 
@@ -53,29 +54,16 @@ def test_accuracy(sess, model_dict, parameter, X, y, verbose=False):
     ##############################
     # Confusion matrix
     ##############################
-    cm = confusion_matrix(actual, predict)
-    print(cm)
-
-
     print("Accuracy is: {:.3f}%".format(accuracy*100))
     print("Random baseline: {:.3f}%".format(1./32*100))
 
-    fig, ax = plt.subplots()
-
-    ax.matshow(cm, cmap=plt.cm.Blues)
-    for (i, j), z in np.ndenumerate(cm):
-        ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
-    # Make various adjustments to the plot.
-    # plt.tight_layout()
-    # plt.colorbar()
-    # tick_marks = np.arange(12)
-    # plt.xticks(tick_marks, range(12))
-    # plt.yticks(tick_marks, range(12))
-    # plt.xlabel('Predicted')
-    # plt.ylabel('True')
-    plt.show(block=True)
-
-    # raw_input("Press Enter to continue...")
+    if show_confusion_matrix:
+        cm = confusion_matrix(actual, predict)
+        fig, ax = plt.subplots()
+        ax.matshow(cm, cmap=plt.cm.Blues)
+        for (i, j), z in np.ndenumerate(cm):
+            ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
+        plt.show(block=True)
 
 
 

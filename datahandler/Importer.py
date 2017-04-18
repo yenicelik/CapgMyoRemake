@@ -10,11 +10,10 @@ import datetime
 # one needs to distuinguish between multiple sessions again. Not sure if generalization can be easily applied.
 #TODO: in the batch_loader, we cannot guarantee we always have a satisfying batch_number to not cause an index-error. If the batch-size is a divider of 1000, this shouldn't be a problem for now. Beware of empty batches in case there is no gesture for a specific person
 #TODO: implement Importer that lets you choose between: Intra-session, Cross-session, Cross-subject
+#TODO: Potentially, it could be wise to also have an axis for the frame-order - in case we need to
 class Importer(object):
     """ All configurations assume that we currently import the CapgMyo dataset. Major work needs to be done if a different type of data is imported.
-    """
-    #TODO: Potentially, it could be wise to also have an axis for the frame-order - in case we need to
-    """ Impoter is responsible for all preprocessing
+    Impoter is responsible for all preprocessing
         Will finally return an array, the 'super-matrix':
            0  1  2  3  4  5  6  7  ...  n
         -----------------------------------
@@ -54,7 +53,7 @@ class Importer(object):
         self.trial = self.get_dict_property(file_list, "trial")
 
         #to create the above given vector, we must repeat the first three values, if we want to treat the individual videos as frames
-        self.super_matrix = np.concatenate((self.gesture, self.subject, self.trial), axis=1)
+        self.super_matrix = np.concatenate((self.subject, self.gesture, self.trial), axis=1)
         #print("Super Matrix 1: ", self.super_matrix.shape)
         # now we repeat each of these values 1000 times, because we want to flatten out the videos to frames
         # this results in about O(3%) of all data duplicated, which is accebtable given the convenience of the operations that will follow
@@ -70,6 +69,10 @@ class Importer(object):
 
     #######################
     # DATA OUTPUT FUNCTIONS
+    def get_super_matrix(self):
+        return self.super_matrix
+
+    #TODO: this function is moved to the DataLoader. It stays here just for compatibility purposes until the new pipeline has been built
     def get_trainingset(self):
         """
         :return: Returns the entire dataset X, and their respective one-hot labels
@@ -89,36 +92,6 @@ class Importer(object):
                 print("error!! with one-hot encoding!")
 
         return X, y
-
-
-
-    def get_super_matrix(self):
-        return self.super_matrix
-
-
-    def get_unclassified_dataset(self):
-        """
-        In this case, we don't care what subject and trial these gestures are from. As such, we can just spit out the entire dataset not sorted or split by any parameters.
-        :return: The tensor of emg video-frames, and their respective gesture label
-        """
-        return self.X, self.y
-
-    def get_dataset_arr(self, mode):
-        """
-        Always outputs frames! No videos currently
-        :param mode:
-        :return:
-        """
-        if not (mode == "random" or mode == "random" or mode == "cross-subject"):
-            print("get_dataset_arr in Importer.py: Please select a valid mode! random, cross-session, cross-subject")
-            sys.exit(0)
-        if mode == "random":
-            pass
-        if mode == "cross-session":
-            pass
-        if mode == "cross-subject":
-            pass
-
 
 
     #######################
