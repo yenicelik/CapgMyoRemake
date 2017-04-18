@@ -6,6 +6,8 @@ import scipy.io as sio
 import matplotlib.pyplot as plt
 import datetime
 
+#TODO: It would be the easiest to choose the correct classes when reading in the files i think... anything else is gonna be really slow. This is acceptable, but once the filenumbers are retrieved, one can do simple string-operations to filter out the necessary files. On the other side, \
+# one needs to distuinguish between multiple sessions again. Not sure if generalization can be easily applied.
 #TODO: in the batch_loader, we cannot guarantee we always have a satisfying batch_number to not cause an index-error. If the batch-size is a divider of 1000, this shouldn't be a problem for now. Beware of empty batches in case there is no gesture for a specific person
 #TODO: implement Importer that lets you choose between: Intra-session, Cross-session, Cross-subject
 class Importer(object):
@@ -41,9 +43,9 @@ class Importer(object):
         #TODO: get rid of any unnecessary self. structures
         #These lists should have the exact same order. They must! I hope I coded everything correctly, and python doesn't optimize away stuff.
         self.data = self.get_dict_property(file_list, "data")
-        print("Data: ", np.asarray(self.data).shape)
+        #print("Data: ", np.asarray(self.data).shape)
         self.data = np.reshape(self.data, (-1, 16 * 8))
-        print("Data: ", np.asarray(self.data).shape)
+        #print("Data: ", np.asarray(self.data).shape)
         self.gesture = self.get_dict_property(file_list, "gesture")
         #TODO: change this into a hard-coded style, where additional classes are input depending on how many previous classes exist (a function that counts classes, and returns the number of different classes given a certain dataset
         # self.gesture[self.gesture == 100] = 9
@@ -53,30 +55,43 @@ class Importer(object):
 
         #to create the above given vector, we must repeat the first three values, if we want to treat the individual videos as frames
         self.super_matrix = np.concatenate((self.gesture, self.subject, self.trial), axis=1)
-        print("Super Matrix 1: ", self.super_matrix.shape)
+        #print("Super Matrix 1: ", self.super_matrix.shape)
         # now we repeat each of these values 1000 times, because we want to flatten out the videos to frames
         # this results in about O(3%) of all data duplicated, which is accebtable given the convenience of the operations that will follow
         self.super_matrix = np.repeat(self.super_matrix, 1000, axis=0)
-        print("Super Matrix 2: ", self.super_matrix.shape)
+        #print("Super Matrix 2: ", self.super_matrix.shape)
         self.super_matrix = np.reshape(self.super_matrix, (-1, 3))
-        print("Super Matrix 3: ", self.super_matrix.shape)
+        #print("Super Matrix 3: ", self.super_matrix.shape)
         # now we want to concatenate the data matrix next to this matrix. Before we can do that, we must flatten the video-format to individual frames (before: videos are samples; now: frames are samples)
         self.super_matrix = np.concatenate((self.super_matrix, self.data), axis=1)
-        print("Super Matrix 4: ", self.super_matrix.shape)
-
-        #Turn into one-hot
-        # self.y = np.zeros((self.X.shape[0], 12))
-        # self.y[np.arange(self.X.shape[0]), self.y_tmp] = 1
-        #
-        # for i in range(self.X.shape[0]):
-        #     if np.sum(self.y[i]) != 1:
-        #         print("error!!")
-
+        #print("Super Matrix 4: ", self.super_matrix.shape)
 
 
 
     #######################
     # DATA OUTPUT FUNCTIONS
+    def get_trainingset(self):
+        """
+        :return: Returns the entire dataset X, and their respective one-hot labels
+        """
+        #TODO: change dimension of one-hot vector to adaptable size!
+        tmp_y = self.super_matrix[:, 1].astype(int) #seems like a really unsafe operation..
+        X = self.super_matrix[:, 3:]
+
+        range = len(np.unique(tmp_y))
+
+        #Turn into one-hot
+        y = np.zeros((tmp_y.shape[0], range))
+        y[np.arange(y.shape[0]), tmp_y-1] = 1
+
+        for i in xrange(y.shape[0]):
+            if np.sum(y[i, :]) != 1:
+                print("error!! with one-hot encoding!")
+
+        return X, y
+
+
+
     def get_super_matrix(self):
         return self.super_matrix
 
@@ -103,36 +118,6 @@ class Importer(object):
             pass
         if mode == "cross-subject":
             pass
-
-
-
-
-    def get_intra_session_dataset(self):
-        """
-        In this case, we must split the dataset by the ses
-        :return:
-        """
-        pass
-
-
-    def get_cross_session_dataset(self):
-        """
-        In this case, we care about which emg video-frames was create by which session.
-        :return: Return an array of tensors. Each tensor consists of the emg video-frames and the gesture label. Every two array-elements contains data from different sessions.
-        """
-        pass
-
-
-    def get_cross_subject_dataset(self):
-        """
-        In this case, we care about which emg video-frames was created by whom
-        :return: Return an array of tensors. Each tensor consists of the emg video-frames and the gesture label. Every two array-elements contains data from different subjects.
-        """
-        pass
-
-
-
-
 
 
 
@@ -280,8 +265,12 @@ class Importer(object):
 
 def main():
     importerObj = Importer("Datasets/Preprocessed/DB-a")
+    importerObj.get_super_matrix()
 
     X, y = importerObj.get_trainingset()
+
+    print(X.shape)
+    print(y.shape)
 
 if __name__ == "__main__":
     main()

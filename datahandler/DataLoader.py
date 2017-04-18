@@ -13,7 +13,7 @@ class DataLoader(object):
 
 if __name__ == '__main__':
 
-    importerObj = Importer("Datasets/Preprocessed/DB-a")
+    importerObj = Importer("../Datasets/Preprocessed/DB-a")
     super_matrix = importerObj.get_super_matrix()
 
     dataLoader = DataLoader(super_matrix)

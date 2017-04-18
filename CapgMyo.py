@@ -56,6 +56,11 @@ def main(restore, parameter, full_train=False, go_train=True):
         else:
             sess.run(init)
 
+        #TODO: luckily, this function can be called multiple times operating on the same weights
+        #TODO: the essence of cross-session training is that we train on all items, but one. Then, we test on the excluded item. This should be easy to implement actually..
+        #TODO: do we have the constraint that all the data must come from the same person? I think we do.. Read the paper fo specifications.
+        #TODO: same with cross-subject..
+
         if go_train:
             train(
                         sess=sess,
