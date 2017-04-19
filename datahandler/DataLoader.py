@@ -56,7 +56,19 @@ class DataLoader(object):
         out = self.get_cross_session_dataset_given_subject_id(random_person)
         return out #Of course this idea can be expanded to a 2D array incorporating multiple people... currently, we just pick a random person however... Best: this should be done for multiple people.
 
+    #This is to some extent a pseduo-cross-session test in which we pre-train on the given data, and test on the chosen data
+    def get_cross_session_pretrain_dataset(self, subject_id):
+        """
+        Gets the dataset on which we pretrain the cross-session tests. This is not pure cross session, but good enough.
+        :param subject_id: The subject id on which we will perform cross-session.
+        :return: Return a tuple of the form (X, y), where X is a tensor of the frames and y contains the corresponding gesture labels.
+        """
+        #first of all, fill all the values with everything except the subject. We will then iterate through all subjects. All the data should be initialliy pre-trained on this.
+        found_elements = self.sm[ (self.sm[:, 0] != subject_id) ]
+        if (found_elements.size != 0):
+            out = self.get_X_and_y(found_elements, mode="trial")
 
+        return out
 
     def get_cross_session_dataset_given_subject_id(self, subject_id):
         """
@@ -67,7 +79,7 @@ class DataLoader(object):
         out = [] #The order of the subjects doesn't matter. these could even be anonymous. As such, we don't need i elements for the output!
 
         print("Entering cross session function")
-        for i in range(self.no_of_trials):
+        for i in range(self.no_of_trials):              #we must iterate over these values, because we don't always have the full range covered by the dataset. We take what we can get
             found_elements = self.sm[
                                         (self.sm[:, 2] == i) &
                                         (self.sm[:, 0] == subject_id)

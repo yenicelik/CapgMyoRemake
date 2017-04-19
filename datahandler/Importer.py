@@ -96,6 +96,7 @@ class Importer(object):
 
     #######################
     # DIRECTORY FUNCTIONS
+    #TODO: create a recursive function/with a query/stack out of this
     def get_all_data_dirs(self, directory, verbose=False):
         """
         :param directory: The directory in which all the datasets are filed in.
