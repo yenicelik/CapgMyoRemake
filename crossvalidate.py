@@ -9,6 +9,34 @@ from train import *
 
 
 def crossvalidate_intrasession(parameter, dataLoader):
+    # Due to the following arguments, this is equivalent to training on the entire training set and validating on a few datasamples that were not seen before.
+    # The usual logic implies the following data training:
+    #   1. Pre-training on everything except a few frames of.
+    #   2. Then use cross-validation on a few left frames by leaving one value out. that are in the same trial.
+    # If we do so, all data samples except these few cross-validated sets have been seen.
+    # The network may have a higher bias towards the finally trained session (we can easily do so by adaption).
+    # This action is equivalent to pretraining on all data but a test-data. Then cross-validating on some randomly encountered data.
+    # Because this task is will likely yield similar results to if everything was trained befreo anyways, we just train on everything simultaneously
+
+    X_raw, y_raw = dataLoader.get_unfiltered_data()
+
+    #shuffle that shit
+    indices = np.arange(X_raw.shape[0])
+    np.random.shuffle(indices)
+
+    test_ratio = 0.2
+    test_size = X_raw.shape[0] * (1-test_ratio) #I very much hope X is divisible by 0.1 with a result that is divisible by 1000 #TODO:somehow make this parameter more 'safe'
+    train_size = X_raw.shape[0] * test_ratio
+    X_train = X_train[indices[test_size:]]
+    X_cv = X_tra
+
+
+
+
+
+
+
+
 
 
 def crossvalidate_crosssession(parameter, dataLoader):
@@ -16,6 +44,8 @@ def crossvalidate_crosssession(parameter, dataLoader):
     no_of_subjects = dataLoader.no_of_subjects
     #We construct a training set based on all the subjects that are not involved in testing for the individual session.
     #Then we cross-validate over all sessions from within this subject
+
+    #we need to separate by trials!
 
     ## Initialize TensorFlow Graph
     tf.global_variables_initializer()

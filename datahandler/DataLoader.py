@@ -122,6 +122,11 @@ class DataLoader(object):
 
         return out
 
+    def get_unfiltered_data(self):
+        #TODO: do we want to shuffle this etc.? I think this might not be necessary. Also, should this be in form of a ready-to-cv array?
+        out = self.get_X_and_y(self.sm)
+        return out
+
 
     ###################
     # HELPER FUNCTIONS
