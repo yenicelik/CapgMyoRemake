@@ -7,11 +7,12 @@ from datahandler.BatchLoader import BatchLoader
 from datahandler.Saver import *
 
 
-"""
-parameter is a dictionary consisting of
-'NUM_EPISODES':
-
-"""
+ # parameter = {
+ #            'NUM_EPOCHS': 1,
+ #            'BATCH_SIZE': 100,
+ #            'SAVE_DIR': 'saves/',
+ #            'SAVE_EVERY': 500 #number of batches after which to save
+ #    }
 
 #TODO: Epoch == Full pass through the data
 #TODO: the model should be saved on the harddrive frequently!
@@ -19,7 +20,7 @@ parameter is a dictionary consisting of
 def train(sess, parameter, model_dict, X, y, saverObj):
     """ Trains the network to the given environment. Saves weights to saver
         In: parameter (Dictionary with settings)
-        In: saver (tf.saver where weights and bias will be saved to)
+        In: saver (tf.saver where weights and bias will be saved to). None if model should not be saved
         In: forward_dict (Dictionary referencing to the tensorflow model)
         In: loss_dict (Dictionary referencing to the tensorflow model)
         Out: rewards_list (reward for instantenous run)
@@ -45,13 +46,12 @@ def train(sess, parameter, model_dict, X, y, saverObj):
         end_time = datetime.datetime.now()
         total_time = end_time - start_time
 
-
-
         loss_list.extend(loss)
 
         percentage = float(epoch) / parameter['NUM_EPOCHS']
 
-        saverObj.save_session(sess, parameter['SAVE_DIR'])
+        if saverObj is not None:
+            saverObj.save_session(sess, parameter['SAVE_DIR'])
 
         print("Progress: {0:.3f}%%".format(percentage * 100))
         print("EST. time per episode: " + str(total_time))
@@ -78,7 +78,8 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y, saverObj):
     epoch_done = False
     save_iter = 0
     while not epoch_done:
-        X_batch, y_batch, epoch_done = batchLoader.load_batch()
+
+        X_batch, y_batch, epoch_done = batchLoader.load_batch() #TODO: this runs one time too much. Create an initializer and move it to the end, or create a while True with a break condition
 
         loss, predict, _, _ = sess.run(
                         #Describe what we want out of the model
@@ -98,7 +99,8 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y, saverObj):
                     )
 
         if save_iter % parameter['SAVE_EVERY'] == 0:
-            saverObj.save_session(sess, parameter['SAVE_DIR'], tf.train.global_step(sess, global_step_tensor=model_dict['globalStepTensor'])) #step in terms of batches #cur_epoch * batchLoader.number_of_batches + batchLoader.batch_counter
+            if saverObj is not None:
+                saverObj.save_session(sess, parameter['SAVE_DIR'], tf.train.global_step(sess, global_step_tensor=model_dict['globalStepTensor'])) #step in terms of batches #cur_epoch * batchLoader.number_of_batches + batchLoader.batch_counter
             print("\nStep progress: ",  100. * batchLoader.batch_counter/ batchLoader.number_of_batches )
             print("Training Loss: ", np.sum(loss)/batchLoader.batch_size)
             print("Epoch Progression: ", cur_epoch/float(parameter['NUM_EPOCHS']))

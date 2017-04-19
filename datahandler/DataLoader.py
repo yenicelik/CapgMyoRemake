@@ -121,28 +121,14 @@ class DataLoader(object):
         tmp_y = inp_matrix[:, 1].astype(int) #seems like a really unsafe operation..
         X = inp_matrix[:, 3:]
 
-
-        # print("Unique elements are: ", np.unique(tmp_y))
-
-
         #TODO: Is this error-prone enough? Also, this shouldn't be necessarily hardcoded, but it seems like this is a property of the dataset, so not sure what else to do
         range = len(np.unique(self.sm[:, 1]))
         tmp_y[tmp_y == 100] = range-1
         tmp_y[tmp_y == 101] = range
 
-
         #Turn into one-hot
         y = np.zeros((tmp_y.shape[0], range))
-
-        # print("y is: ", y)
-        # print("tmp_y has shape: ", tmp_y.shape)
-        # print("y has shape: ", y.shape)
-        # print("Range is: ", range)
-
         y[np.arange(y.shape[0]), np.subtract(tmp_y, 1)] = 1
-
-        # print("y is: ", y)
-        # print("y has shape: ", y.shape)
 
         for i in xrange(y.shape[0]):
             if np.sum(y[i, :]) != 1:
@@ -167,4 +153,3 @@ if __name__ == '__main__':
     print("Cross subject elements: ", len(cross_subject_dataset))
     print("Cross session elements: ", len(cross_session_dataset))
     print("Intra session elements: ", len(intra_session_dataset))
-    print(intra_session_dataset)

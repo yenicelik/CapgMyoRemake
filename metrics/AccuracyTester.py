@@ -65,6 +65,8 @@ def test_accuracy(sess, model_dict, parameter, X, y, verbose=False, show_confusi
             ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
         plt.show(block=True)
 
+    return accuracy
+
 
 
 

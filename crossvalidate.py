@@ -14,7 +14,7 @@ def main(parameter):
     ################################
     # Importing all data
     ################################
-    importerObj = Importer("/Datasets/Preprocessed/DB-a")
+    importerObj = Importer("Datasets/Preprocessed/DB-a")
     super_matrix = importerObj.get_super_matrix()
 
     dataLoader = DataLoader(super_matrix)
@@ -27,7 +27,6 @@ def main(parameter):
     print("Cross subject elements: ", len(cross_subject_dataset))
     print("Cross session elements: ", len(cross_session_dataset))
     print("Intra session elements: ", len(intra_session_dataset))
-    print(intra_session_dataset)
 
 
     #################################
@@ -36,39 +35,53 @@ def main(parameter):
     #We don't have an intention to save stuff (at the moment at least, I think so). So no saver object is included. We just want the logs and the capacity of the model trained from scratch
     tf.global_variables_initializer()
     W, b, model_dict = init_graph()
-    init = tf.initialize_all_variables()
+
 
     ################################
-    # Training on data
+    # Cross Validate
     ################################
-
-
-
     with tf.Session() as sess:
-        sess.run(init)
 
-        for dataset in cross_subject_dataset:
-            #TODO: need to work on the 'cross-validatoin' aspect (leaving one out, testing on all the other ones.. I think for that we just need to concatenate all X[not i] (so maybe use an enumeration variable)
-            tf.reset_default_graph()
-            X, y = dataset
+        accuracy_list = []
+
+
+        for i in range(len(cross_subject_dataset)):
+            #tf.reset_default_graph() #TODO: Need to reinitialize weights after each run!!
+            init = tf.initialize_all_variables()
+            sess.run(init)
+
+            X_cv, y_cv = cross_subject_dataset[i]
+            X_cv = np.reshape(X_cv, (-1, 16, 8))
+            y_cv = np.concatenate((y_cv, np.zeros((y_cv.shape[0], 2))), axis=1) #TODO: very hacky solution. Must change this value in the model later!!!! Create a variable within the model for this!
+
+            train_set = [cross_subject_dataset[j] for j in range(len(cross_subject_dataset)) if i != j] #One could also just flatten the list, and every odd one is X, every even one is y. I just didn't want to introduce futher libraries.
+
+            X_train = np.concatenate([x for x, y in train_set], axis=0)
+            X_train = np.reshape(X_train, (-1, 16, 8)) #maybe do this within the model, might be faster if this is done uniformly between all functions anyways
+            y_train = np.concatenate([y for x, y in train_set], axis=0)
+            y_train = np.concatenate((y_train, np.zeros((y_train.shape[0], 2))), axis=1) #TODO: very hacky solution. Must change this value in the model later!!!! Create a variable within the model for this!
 
             train(
                         sess=sess,
                         parameter=parameter,
                         model_dict=model_dict,
-                        X=X,
-                        y=y,
-                        saverObj=saverObj #TODO: create an option such that not saving is also possible
+                        X=X_train,
+                        y=y_train,
+                        saverObj=None
             )
 
-        test_accuracy(
-                    sess=sess,
-                    model_dict=model_dict,
-                    parameter=parameter,
-                    X=X_sample,
-                    y=y_sample,
+            accuracy = test_accuracy(
+                        sess=sess,
+                        model_dict=model_dict,
+                        parameter=parameter,
+                        X=X_cv,
+                        y=y_cv
+            )
 
-        )
+            accuracy_list.append(accuracy)
+
+        total_accuracy = float(sum(accuracy_list))/len(cross_subject_dataset) * 100
+        print("Accuracy of the current model is: {:.3f}%".format(total_accuracy))
 
 
 
@@ -87,8 +100,11 @@ if __name__ == '__main__':
 
     #TODO: implement a log-file
     parameter = {
-            'NUM_EPOCHS': 1,
+            'NUM_EPOCHS': 1, #determine what these values should be. Cross validation can take the same time of training we had for 3h, but applied on every subject / potentially on every session etc.
+            'BATCH_SIZE': 100,
             'SAVE_EVERY': 500 #number of batches after which to save
     }
 
     main(parameter)
+
+#TODO: If we want pre-training, we must select all subjects for cross-session; pick all but one for pre-training, and apply the not-selected set as done above with the subjects

@@ -99,7 +99,6 @@ if __name__ == '__main__':
     parameter = {
             'NUM_EPOCHS': 1,
             'BATCH_SIZE': 100,
-            'BATCHES_PASSED': 0,
             'SAVE_DIR': 'saves/',
             'SAVE_EVERY': 500 #number of batches after which to save
     }
