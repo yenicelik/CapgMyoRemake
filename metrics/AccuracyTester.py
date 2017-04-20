@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix
 from datahandler.BatchLoader import BatchLoader
 
 
+#TODO: implement majority-voting over time-frame
 def test_accuracy(sess, model_dict, parameter, X, y, verbose=False, show_confusion_matrix=False):
     """
     :param sess: The tensorflow session that we are going to use.

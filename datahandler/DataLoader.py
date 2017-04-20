@@ -2,7 +2,8 @@ from __future__ import print_function
 import numpy as np
 from Importer import *
 
-#TODO: These functions feel incredibly naive.. Have a look at them later to make them finer / possibly faster.
+
+#TODO: check which functions are actually used, and remove the other ones.
 class DataLoader(object):
     """ This function is here to load any kind of
         All calculations will be based on the the 'super-matrix':
@@ -27,11 +28,13 @@ class DataLoader(object):
         self.no_of_subjects = np.amax(self.sm[:, 0]).astype(int) #there might be inconsistencies in the data, so we must loop from minimum to maximum, and append to the output anything that is fitting.
         self.no_of_gesture = np.amax(self.sm[:, 1]).astype(int)
         self.no_of_trials = np.amax(self.sm[:, 2]).astype(int)
+        self.trials = np.unique(self.sm[:, 2].astype(int))
+        self.subjects = np.unique(self.sm[:, 0].astype(int))
+        self.gestures = np.unique(self.sm[:, 1].astype(int))
         print("Subjects: ", self.no_of_subjects)
         print("Gestures: ", self.no_of_gesture)
         print("Trials: ", self.no_of_trials)
 
-    #TODO: I think i messed up some indices here, have a look at this. Otherwise, there is an error in the logic/understanding in sematics of each operation
     def get_cross_subject_dataset(self):
         """
         This feels solved.
@@ -46,7 +49,7 @@ class DataLoader(object):
                                         (self.sm[:, 0] == i)
             ]
             if (found_elements.size != 0):
-                tmp = self.get_X_and_y(found_elements, mode="subject")
+                tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
         return out
@@ -64,9 +67,11 @@ class DataLoader(object):
         :return: Return a tuple of the form (X, y), where X is a tensor of the frames and y contains the corresponding gesture labels.
         """
         #first of all, fill all the values with everything except the subject. We will then iterate through all subjects. All the data should be initialliy pre-trained on this.
-        found_elements = self.sm[ (self.sm[:, 0] != subject_id) ]
+        found_elements = self.sm[
+                                        (self.sm[:, 0] != subject_id)
+        ]
         if (found_elements.size != 0):
-            out = self.get_X_and_y(found_elements, mode="trial")
+            out = self.get_X_and_y(found_elements)
 
         return out
 
@@ -79,13 +84,13 @@ class DataLoader(object):
         out = [] #The order of the subjects doesn't matter. these could even be anonymous. As such, we don't need i elements for the output!
 
         print("Entering cross session function")
-        for i in range(self.no_of_trials):              #we must iterate over these values, because we don't always have the full range covered by the dataset. We take what we can get
+        for trial_id in self.trials:              #we must iterate over these values, because we don't always have the full range covered by the dataset. We take what we can get
             found_elements = self.sm[
-                                        (self.sm[:, 2] == i) &
+                                        (self.sm[:, 2] == trial_id) &
                                         (self.sm[:, 0] == subject_id)
             ]
             if (found_elements.size != 0):
-                tmp = self.get_X_and_y(found_elements, mode="trial")
+                tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
         return out
@@ -117,28 +122,26 @@ class DataLoader(object):
                                         (self.sm[:, 2] == trial_id)
             ]
             if (found_elements.size != 0):
-                tmp = self.get_X_and_y(found_elements, mode="gesture")
+                tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
         return out
 
     def get_unfiltered_data(self):
-        #TODO: do we want to shuffle this etc.? I think this might not be necessary. Also, should this be in form of a ready-to-cv array?
         out = self.get_X_and_y(self.sm)
         return out
 
 
     ###################
     # HELPER FUNCTIONS
-    def get_X_and_y(self, inp_matrix, mode):
+    def get_X_and_y(self, inp_matrix):
         """
         :return: Returns the entire dataset X, and their respective one-hot labels
         """
-        #TODO: change dimension of one-hot vector to adaptable size!
         tmp_y = inp_matrix[:, 1].astype(int) #seems like a really unsafe operation..
         X = inp_matrix[:, 3:]
 
-        #TODO: Is this error-prone enough? Also, this shouldn't be necessarily hardcoded, but it seems like this is a property of the dataset, so not sure what else to do
+        #TODO: Is this error-prone enough? Also, make sure the one-hot is dynamic.
         range = len(np.unique(self.sm[:, 1]))
         tmp_y[tmp_y == 100] = range-1
         tmp_y[tmp_y == 101] = range

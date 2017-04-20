@@ -16,6 +16,8 @@ def print_layershape(layername, inputs, verbose=False):
 
 #TODO: figure out how to incorporate a is_training variable because once the model is built, this variable cannot be changed. Do we need a tensorflow variable for this?
 #TODO: implement a learning-rate tensorflow variable
+#TODO: implement one-hot dimension as input variable
+#TODO: have a more robust load for the individual variables. That means, have a loader object that detects the variables by names, and individually puts them back. if no variable is found, initialize the variable from scratch
 def init_graph(is_training=True, verbose=True):
     """
     :param is_training: Whether the session we're running is a training session or not.
@@ -23,7 +25,7 @@ def init_graph(is_training=True, verbose=True):
     :return: The initized weights-dictionary, bias-dictionary and a model-dictionary that captures all input and output of the created graph.
     """
     W, b, global_step = initialize_parameters()
-    X_input, y_input, loss, predict, updateModel, global_step, keep_prob = build_model(W, b, global_step, verbose=True, is_training=True)
+    X_input, y_input, loss, predict, updateModel, global_step, keep_prob, learning_rate, is_training = build_model(W, b, global_step, verbose=True, is_training=True)
 
     model_dict = {
                     "X_input": X_input,
@@ -32,7 +34,9 @@ def init_graph(is_training=True, verbose=True):
                     "predict": predict,
                     "updateModel": updateModel,
                     "globalStepTensor": global_step,
-                    "keepProb": keep_prob
+                    "keepProb": keep_prob,
+                    "learningRate": learning_rate,
+                    "isTraining": is_training
     }
 
     return W, b, model_dict
@@ -43,8 +47,10 @@ def initialize_parameters():
 
     #Global variable to capture the number of steps made
     global_step = tf.Variable(1, trainable=False, name='global_step')
+    #TODO: Add is_training as variable (boolean, whatever)
 
-    #TODO: Iteratively check if these are the correct weights!
+
+    #TODO: think about a possibility where we have time-frames as inputs.. potentially, time inputs should be treated as a single batch, but this might be slow in other cases (I think though this is only for accuracy detection, and shouldn't be a general problem)
     Weights = {
                 #Is the last number the batch_size? I think it is..
                 "W_Conv1": tf.Variable(tf.random_normal([3, 3, 1, 64], 0.00, 0.01), name="W_Conv1"),
@@ -71,7 +77,7 @@ def initialize_parameters():
                 "b_Affine3": tf.Variable(tf.random_normal([1, 12], 0.00, 0.01), name="b_Affine3")
     }
 
-    return Weights, Bias, global_step
+    return Weights, Bias, global_step, learning_rate
 
 
 
@@ -119,6 +125,8 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     """
     #Initialize variables here.
     keep_prob = tf.placeholder(tf.float32)
+    learning_rate = tf.placeholder(tf.float32)
+    is_training = tf.placeholer(tf.int32)
 
     ## 0.Layer: Input
     #TODO: Input None into the shape; also, input the time-window into the shape!
@@ -179,12 +187,12 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
     #TODO: Parameterize the learning rate!
     #TODO: Choose the optimal algorithm to find the optimal function model
-    trainer = tf.train.GradientDescentOptimizer(learning_rate=0.1) #think about using Adam maybe?
+    trainer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate) #think about using Adam maybe?
     updateModel = trainer.minimize(loss)
 
     #To see how many steps we've been through (this will be saved in-between sessions)
     increment_global_step = tf.assign(global_step, global_step+1)
 
     #We must return 'references' to the individual objects
-    return X_input, y_input, loss, predict, updateModel, increment_global_step, keep_prob
+    return X_input, y_input, loss, predict, updateModel, increment_global_step, keep_prob, learning_rate, is_training
 

@@ -181,7 +181,7 @@ class Importer(object):
         """
         plt.ion()
 
-        sample_int = np.random.randint(0, self.X.shape[0])
+        sample_int = np.random.randint(0, self.super_matrix.shape[0]/1000) #TODO: fix this function dependant on the super matrix
         sample_X = self.X[sample_int, :, :, :]
         sample_y = self.y[sample_int]
 
@@ -240,6 +240,8 @@ class Importer(object):
 def main():
     importerObj = Importer("Datasets/Preprocessed/DB-a")
     importerObj.get_super_matrix()
+
+    importerObj.sample_data()
 
     X, y = importerObj.get_trainingset()
 
