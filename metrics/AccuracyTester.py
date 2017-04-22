@@ -38,7 +38,9 @@ def test_accuracy(sess, model_dict, parameter, X, y, verbose=False, show_confusi
                         feed_dict = {
                             model_dict['X_input']: X_batch,
                             model_dict['y_input']: y_batch,
-                            model_dict['keepProb']: 1.
+                            model_dict['keepProb']: 1.,
+                            model_dict['learningRate']: parameter['LEARNING_RATE'],
+                            model_dict['isTraining']: False
                         }
                     )
 

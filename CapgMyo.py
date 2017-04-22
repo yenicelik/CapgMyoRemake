@@ -92,10 +92,10 @@ if __name__ == '__main__':
     restore = True #wether we want to use the model saved in 'saves/', or start training a model from scratch.
 
     parameter = {
-            'NUM_EPOCHS': 1,
-            'BATCH_SIZE': 100,
+            'NUM_EPOCHS': 28,
+            'BATCH_SIZE': 1000,
             'SAVE_DIR': 'saves/',
-            'SAVE_EVERY': 500 #number of batches after which to save
+            'SAVE_EVERY': 300 #number of batches after which to save
     }
 
     main(restore, parameter, full_train=False, go_train=True)

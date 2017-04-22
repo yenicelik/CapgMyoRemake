@@ -33,6 +33,9 @@ def train(sess, parameter, model_dict, X, y, saverObj):
 
         start_time = datetime.datetime.now()
 
+        if epoch == 16  or epoch == 24:
+            parameter['LEARNING_RATE'] = parameter['LEARNING_RATE'] / 10
+
         loss = run_epoch(
                             cur_epoch=epoch,
                             sess=sess,
@@ -94,7 +97,9 @@ def run_epoch(sess, cur_epoch, parameter, model_dict, X, y, saverObj):
                         feed_dict = {
                             model_dict['X_input']: X_batch,
                             model_dict['y_input']: y_batch,
-                            model_dict['keepProb']: 0.5
+                            model_dict['keepProb']: 0.5,
+                            model_dict['learningRate']: parameter['LEARNING_RATE'],
+                            model_dict['isTraining']: True
                         }
                     )
 

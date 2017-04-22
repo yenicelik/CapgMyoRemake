@@ -82,6 +82,8 @@ class Importer(object):
         X = self.super_matrix[:, 3:]
 
         range = len(np.unique(tmp_y))
+        tmp_y[tmp_y == 100] = range-1
+        tmp_y[tmp_y == 101] = range
 
         #Turn into one-hot
         y = np.zeros((tmp_y.shape[0], range))
@@ -181,11 +183,12 @@ class Importer(object):
         """
         plt.ion()
 
-        sample_int = np.random.randint(0, self.super_matrix.shape[0]/1000) #TODO: fix this function dependant on the super matrix
-        sample_X = self.X[sample_int, :, :, :]
-        sample_y = self.y[sample_int]
+        index = np.random.randint(0, (self.super_matrix.shape[0]/1000)-1)
 
-        self.play_data(sample_X, sample_y, 0.0001)
+        sample_X = self.super_matrix[index:(index+1000),3:]
+        sample_y = self.super_matrix[index:(index+1000),1]
+
+        self.play_data(sample_X, sample_y, 1000)
 
         return []
 
@@ -222,7 +225,7 @@ class Importer(object):
             plt.imshow(frame, cmap='gray')
             #time.sleep(framerate)
             plt.pause(1./framerate)
-            plt.draw()
+            #plt.draw()
 
             if verbose:
                 end_time = datetime.datetime.now()

@@ -77,7 +77,7 @@ def initialize_parameters():
                 "b_Affine3": tf.Variable(tf.random_normal([1, 12], 0.00, 0.01), name="b_Affine3")
     }
 
-    return Weights, Bias, global_step, learning_rate
+    return Weights, Bias, global_step
 
 
 
@@ -126,13 +126,14 @@ def build_model(W, b, global_step, verbose=True, is_training=False):
     #Initialize variables here.
     keep_prob = tf.placeholder(tf.float32)
     learning_rate = tf.placeholder(tf.float32)
-    is_training = tf.placeholer(tf.int32)
+    is_training = tf.placeholder(tf.bool) #0 means false, 1 means true
+    #is_training = False if (is_training == 0) else True
 
     ## 0.Layer: Input
     #TODO: Input None into the shape; also, input the time-window into the shape!
     X_input = tf.placeholder(shape=[None, 16, 8], dtype=tf.float32)
-    if is_training:
-        y_input = tf.placeholder(shape=[None, 12], dtype=tf.int8)
+    y_input = tf.placeholder(shape=[None, 12], dtype=tf.int8)
+
     inputs = tf.reshape(X_input, (-1, 16, 8, 1)) #must be a 4D input into the CNN layer
     inputs = tf.contrib.layers.batch_norm(
                             inputs,

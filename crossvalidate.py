@@ -8,6 +8,8 @@ from model.BuildGraph import *
 from train import *
 
 
+#TODO: implement a logging system
+#TODO: go through code for: 1. any sytnax mistakes / improvements 2. any sematic mistakes / improvements 3. and structural mistakes / improvements (encapsulation etc.)
 def crossvalidate_intrasession(parameter, dataLoader):
     # Due to the following arguments, this is equivalent to training on the entire training set and validating on a few datasamples that were not seen before.
     # The usual logic implies the following data training:
@@ -278,11 +280,12 @@ if __name__ == '__main__':
 
     #TODO: implement a log-file
     parameter = {
-            'NUM_EPOCHS': 1, #determine what these values should be. Cross validation can take the same time of training we had for 3h, but applied on every subject / potentially on every session etc.
-            'BATCH_SIZE': 100,
-            'SAVE_EVERY': 1 #number of batches after which to save
+            'NUM_EPOCHS': 28, #determine what these values should be. Cross validation can take the same time of training we had for 3h, but applied on every subject / potentially on every session etc.
+            'BATCH_SIZE': 1000,
+            'SAVE_EVERY': 300, #number of batches after which to save,
+            'LEARNING_RATE': 0.1
     }
 
-    main(parameter, mode="cross-session")
+    main(parameter, mode="cross-subject")
 
 #TODO: If we want pre-training, we must select all subjects for cross-session; pick all but one for pre-training, and apply the not-selected set as done above with the subjects
