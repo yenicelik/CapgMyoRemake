@@ -5,7 +5,7 @@ import sys
 
 #TODO: make sure that if we input subject-dependent data, it will not cause any error due to a lack of data for a specific gesture etc. e.g. implement a 'stop' signal.
 #TODO: check that we have sufficiently enough samples for each gesture-subject combination such that batch_size is not big enough (batch_size should be divisible by this!)
-#TODO: instea of checking, we can also adapt the batch_size also to min(batch_size, no. gesture-subject-combinations)
+#TODO: instead of checking, we can also adapt the batch_size also to min(batch_size, no. gesture-subject-combinations)
 class BatchLoader(object):
     """
         You can create the object, which will create an array of batches, which you can load using the load_batch method. These are directly feed-able to the model.

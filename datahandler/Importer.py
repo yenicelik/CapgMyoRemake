@@ -80,13 +80,13 @@ class Importer(object):
         #TODO: change dimension of one-hot vector to adaptable size!
         tmp_y = self.super_matrix[:, 1].astype(int) #seems like a really unsafe operation..
         X = self.super_matrix[:, 3:]
+        one_hot_range = len(np.unique(tmp_y))
 
-        range = len(np.unique(tmp_y))
-        tmp_y[tmp_y == 100] = range-1
-        tmp_y[tmp_y == 101] = range
+        tmp_y[tmp_y == 100] = one_hot_range-1
+        tmp_y[tmp_y == 101] = one_hot_range
 
         #Turn into one-hot
-        y = np.zeros((tmp_y.shape[0], range))
+        y = np.zeros((tmp_y.shape[0], one_hot_range))
         y[np.arange(y.shape[0]), tmp_y-1] = 1
 
         for i in xrange(y.shape[0]):
@@ -123,7 +123,7 @@ class Importer(object):
         """
         :param datapath: An single datapath, or an array of datapaths.
         :param verbose:
-        :return: An array of source-data (usually dictionaries including tensor data) extracted from all files from datapath. More specifically, if datapath is an array of .mat files, this function returns an array of data that was contained in all every file of datapath.
+        :return: An array of source-data (usually dictionaries including tensor data) extracted from all files from datapath. More specifically, if datapath is an array of .mat files, this function returns an array of data that was contained in all every filedata of datapath.
         """
 
         if len(datapath) == 0:
@@ -134,8 +134,8 @@ class Importer(object):
 
         if type(datapath) == type([]):
             for filepath in datapath:
-                file = sio.loadmat(filepath)
-                out.append(file)
+                filedata = sio.loadmat(filepath)
+                out.append(filedata)
         else:
             out = [sio.loadmat(datapath)]
 
@@ -150,24 +150,24 @@ class Importer(object):
 
     #######################
     # HELPER FUNCTIONS
-    def get_dict_property(self, data_arr, property):
+    def get_dict_property(self, data_arr, prop):
         """
         :param data_arr: An array of dictionaries.
-        :param property: The property of the dictionary one wants to extract for every element.
+        :param prop: The property of the dictionary one wants to extract for every element.
         :return: An array of elements, which are retrieved by taking this property from the dictionary in every element of the data_arr-array.
         """
         out = []
         for data in data_arr:
-            tmp = data[property]
+            tmp = data[prop]
             out.append( tmp )
 
         return out
 
-    def pop_dict_property(self, data_arr, property):
+    def pop_dict_property(self, data_arr, prop):
         out = []
         for data in data_arr:
             tmp = data
-            tmp.pop(property, None)
+            tmp.pop(prop, None)
             out.append( tmp )
 
         return out

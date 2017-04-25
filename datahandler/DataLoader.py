@@ -1,5 +1,5 @@
 from __future__ import print_function
-import numpy as np
+
 from Importer import *
 
 
@@ -48,7 +48,7 @@ class DataLoader(object):
             found_elements = self.sm[
                                         (self.sm[:, 0] == i)
             ]
-            if (found_elements.size != 0):
+            if found_elements.size != 0:
                 tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
@@ -70,7 +70,7 @@ class DataLoader(object):
         found_elements = self.sm[
                                         (self.sm[:, 0] != subject_id)
         ]
-        if (found_elements.size != 0):
+        if found_elements.size != 0:
             out = self.get_X_and_y(found_elements)
 
         return out
@@ -89,7 +89,7 @@ class DataLoader(object):
                                         (self.sm[:, 2] == trial_id) &
                                         (self.sm[:, 0] == subject_id)
             ]
-            if (found_elements.size != 0):
+            if found_elements.size != 0:
                 tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
@@ -121,7 +121,7 @@ class DataLoader(object):
                                         (self.sm[:, 0] == subject_id) &
                                         (self.sm[:, 2] == trial_id)
             ]
-            if (found_elements.size != 0):
+            if found_elements.size != 0:
                 tmp = self.get_X_and_y(found_elements)
                 out.append(tmp)
 
@@ -142,12 +142,12 @@ class DataLoader(object):
         X = inp_matrix[:, 3:]
 
         #TODO: Is this error-prone enough? Also, make sure the one-hot is dynamic.
-        range = len(np.unique(self.sm[:, 1]))
-        tmp_y[tmp_y == 100] = range-1
-        tmp_y[tmp_y == 101] = range
+        one_hot_range = len(np.unique(self.sm[:, 1]))
+        tmp_y[tmp_y == 100] = one_hot_range-1
+        tmp_y[tmp_y == 101] = one_hot_range
 
         #Turn into one-hot
-        y = np.zeros((tmp_y.shape[0], range))
+        y = np.zeros((tmp_y.shape[0], one_hot_range))
         y[np.arange(y.shape[0]), np.subtract(tmp_y, 1)] = 1
 
         for i in xrange(y.shape[0]):

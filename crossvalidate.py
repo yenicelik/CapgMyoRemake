@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-from datahandler.Importer import *
-from datahandler.Saver import *
 from datahandler.DataLoader import *
 from metrics.AccuracyTester import *
 from model.BuildGraph import *
@@ -182,7 +180,7 @@ def crossvalidate_crosssession(parameter, dataLoader):
 
 
 
-def crossvalidate_subjects(parameter, dataLoader):
+def crossvalidate_subjects(parameter, dataLoader, is_voting):
 
     cross_subject_dataset = dataLoader.get_cross_subject_dataset()
 
@@ -226,13 +224,27 @@ def crossvalidate_subjects(parameter, dataLoader):
                         saverObj=None
             )
 
-            accuracy = test_accuracy(
-                        sess=sess,
-                        model_dict=model_dict,
-                        parameter=parameter,
-                        X=X_cv,
-                        y=y_cv
-            )
+            accuracy = 0
+
+            if is_voting:
+                print("Entering voting function")
+                accuracy = voting(
+                            sess=sess,
+                            model_dict=model_dict,
+                            parameter=parameter,
+                            X=X_cv,
+                            y=y_cv,
+                            framesize=1000,
+                            verbose=False
+                )
+            else:
+                accuracy = test_accuracy(
+                            sess=sess,
+                            model_dict=model_dict,
+                            parameter=parameter,
+                            X=X_cv,
+                            y=y_cv
+                )
 
             accuracy_list.append(accuracy)
 
@@ -242,7 +254,7 @@ def crossvalidate_subjects(parameter, dataLoader):
     return accuracy_list
 
 
-def main(parameter, mode):
+def main(parameter, mode, is_voting):
     #Basically, we always perform 'leave-one-out' cross validation
 
     ################################
@@ -255,15 +267,14 @@ def main(parameter, mode):
 
     #TODO: create a logging style, such that multiple modes at once can be selected aswell
     if mode=="cross-session":
-        crossvalidate_crosssession(parameter, dataLoader)
+        crossvalidate_crosssession(parameter, dataLoader, is_voting)
     elif mode=="intra-session":
-        crossvalidate_intrasession(parameter, dataLoader)
+        crossvalidate_intrasession(parameter, dataLoader, is_voting)
     elif mode=="cross-subject":
-        crossvalidate_subjects(parameter, dataLoader)
+        crossvalidate_subjects(parameter, dataLoader, is_voting)
     else:
         print("No mode specified!")
         sys.exit(11)
-
 
 
 if __name__ == '__main__':
@@ -278,14 +289,22 @@ if __name__ == '__main__':
     #                 "updateModel": updateModel
     # }
 
+    test_parameter = {
+        'NUM_EPOCHS': 1, #determine what these values should be. Cross validation can take the same time of training we had for 3h, but applied on every subject / potentially on every session etc.
+        'BATCH_SIZE': 100,
+        'SAVE_EVERY': 10, #number of batches after which to save,
+        'LEARNING_RATE': 0.1
+    }
+
     #TODO: implement a log-file
-    parameter = {
+    paper_parameter = {
             'NUM_EPOCHS': 28, #determine what these values should be. Cross validation can take the same time of training we had for 3h, but applied on every subject / potentially on every session etc.
             'BATCH_SIZE': 1000,
             'SAVE_EVERY': 300, #number of batches after which to save,
             'LEARNING_RATE': 0.1
     }
 
-    main(parameter, mode="cross-subject")
+
+    main(test_parameter, mode="cross-subject", is_voting=True)
 
 #TODO: If we want pre-training, we must select all subjects for cross-session; pick all but one for pre-training, and apply the not-selected set as done above with the subjects

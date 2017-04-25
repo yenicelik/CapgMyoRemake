@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-from datahandler.Importer import *
-from datahandler.Saver import *
 from metrics.AccuracyTester import *
 from model.BuildGraph import *
 from train import *
@@ -51,7 +49,7 @@ def main(restore, parameter, full_train=False, go_train=True):
     with tf.Session() as sess:
 
         if restore:
-            saverObj.load_session(sess, parameter['SAVE_DIR']) #Do I need anything else? Like to add the globa stuff etc.?
+            saverObj.load_session(sess, parameter['SAVE_DIR']) #Do I need anything else? Like to add the global stuff etc.?
             print("Model should be restored now")
         else:
             sess.run(init)
