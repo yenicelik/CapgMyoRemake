@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="AlFRED" traceLevel="DETAILS">
+    <serverData>
+      <paths name="AlFRED">
+        <serverdata>
+          <mappings>
+            <mapping deploy="Documents/Myo/CapgMyoRemake" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

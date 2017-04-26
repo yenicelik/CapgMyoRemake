@@ -58,7 +58,7 @@ def train(sess, parameter, model_dict, X, y, saverObj):
         logging.debug("Epoch took us: {}".format(total_time))
         logging.debug("Epoch had loss: {}".format(loss))
         logging.debug("Average loss of epochs so far: {} (this value should decrease)".format(np.sum(loss_list) / parameter['NUM_EPOCHS']))
-
+        #TODO: currently, not the average loss of all epochs is considered, but only the current epoch. This value still should decrease, but this is not a major shit
         percentage = float(epoch) / parameter['NUM_EPOCHS']
 
         if saverObj is not None:

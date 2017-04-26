@@ -9,9 +9,9 @@
 
     "handlers": {
         "console": {
+            "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "simple",
-            "class": "logging.handlers.RotatingFileHandler",
             "filename": "debug.log",
             "maxBytes": 10485760,
             "backupCount": 20,

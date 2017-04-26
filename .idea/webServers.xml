@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c41b046a-2853-4fb6-9ea1-cda902c1442b" name="AlFRED" url="http://yeniceli.ddns.net">
+        <fileTransfer host="yeniceli.ddns.net" port="8080" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/yenicelik" accessType="SFTP" passphrase="dff8dfcbdfdcdfcfdf89dff9dfc3df89dfebdfdfdf89dfe2dfe6df98" username="yenicelik" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
