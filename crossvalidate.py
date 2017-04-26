@@ -4,7 +4,31 @@ from datahandler.DataLoader import *
 from metrics.AccuracyTester import *
 from model.BuildGraph import *
 from train import *
+import logging
+logging = logging.getLogger(__name__)
 
+import os
+import json
+import logging.config
+
+def setup_logging(
+    default_path='logging.json',
+    default_level=logging.INFO,
+    env_key='LOG_CFG'
+):
+    """Setup logging configuration
+
+    """
+    path = default_path
+    value = os.getenv(env_key, None)
+    if value:
+        path = value
+    if os.path.exists(path):
+        with open(path, 'rt') as f:
+            config = json.load(f)
+        logging.config.dictConfig(config)
+    else:
+        logging.basicConfig(level=default_level)
 
 #TODO: implement a logging system
 #TODO: go through code for: 1. any sytnax mistakes / improvements 2. any sematic mistakes / improvements 3. and structural mistakes / improvements (encapsulation etc.)
@@ -182,28 +206,39 @@ def crossvalidate_crosssession(parameter, dataLoader):
 
 def crossvalidate_subjects(parameter, dataLoader, is_voting):
 
+    logging.debug("Entering cross_validate_subjects function")
+
     cross_subject_dataset = dataLoader.get_cross_subject_dataset()
 
-    print("Data loader: ", dataLoader.sm.shape)
-    print("Cross subject elements: ", len(cross_subject_dataset))
+    logging.debug("Data loader's super_matrix has shape: {}".format(dataLoader.sm.shape))
+    logging.debug("The number of different subjects: {}".format(len(cross_subject_dataset)))
 
+    logging.debug("Initializing tensorflow graph")
     ## Initializing TensorFlow Graph
-    tf.global_variables_initializer()
+    tf.global_variables_initializer() #TODO: change this to initialize_all_variables! or vice verca
     W, b, model_dict = init_graph()
+
+    logging.debug("tensorflow graph initialized successfully")
 
     ## Cross Validate
     accuracy_list = []
 
     for i in range(len(cross_subject_dataset)):
         #tf.reset_default_graph() #TODO: Need to reinitialize weights after each run!! Opening and closing a session each time is a hacky solution!
+        logging.info("Cross-validating by leaving subject number {} out".format(i))
         with tf.Session() as sess:
 
+            logging.debug("Re-initializing graph")
             init = tf.initialize_all_variables()
             sess.run(init)
+            logging.debug("Graph re-initialized successfully")
 
             X_cv, y_cv = cross_subject_dataset[i]
             X_cv = np.reshape(X_cv, (-1, 16, 8))
             y_cv = np.concatenate((y_cv, np.zeros((y_cv.shape[0], 2))), axis=1) #TODO: very hacky solution. Must change this value in the model later!!!! Create a variable within the model for this!
+
+            logging.debug("X_cv has shape: {}".format(X_cv.shape))
+            logging.debug("y_cv has shape: {}".format(X_cv.shape))
 
             train_set = [cross_subject_dataset[j] for j in range(len(cross_subject_dataset)) if i != j] #One could also just flatten the list, and every odd one is X, every even one is y. I just didn't want to introduce futher libraries.
 
@@ -212,9 +247,16 @@ def crossvalidate_subjects(parameter, dataLoader, is_voting):
             y_train = np.concatenate([y for x, y in train_set], axis=0)
             y_train = np.concatenate((y_train, np.zeros((y_train.shape[0], 2))), axis=1) #TODO: very hacky solution. Must change this value in the model later!!!! Create a variable within the model for this!
 
-            X_train = X_train[:1000, :, :]
-            y_train = y_train[:1000, :]
+            logging.debug("X_train has shape: {}".format(X_train.shape))
+            logging.debug("y_train has shape: {}".format(X_train.shape))
 
+            # logging.warning("Using only the first 1000 elements!")
+            # X_train = X_train[:1000, :, :]
+            # y_train = y_train[:1000, :]
+
+            #TODO: save model, and allow option to retrieve saved model (simple if-statement); we can also just say we want a saver object with a certain path. Might need to change the parameter['SAVE_DIR'] option
+
+            logging.debug("Entering train function")
             train(
                         sess=sess,
                         parameter=parameter,
@@ -227,7 +269,7 @@ def crossvalidate_subjects(parameter, dataLoader, is_voting):
             accuracy = 0
 
             if is_voting:
-                print("Entering voting function")
+                logging.debug("Entering voting function")
                 accuracy = voting(
                             sess=sess,
                             model_dict=model_dict,
@@ -238,6 +280,7 @@ def crossvalidate_subjects(parameter, dataLoader, is_voting):
                             verbose=False
                 )
             else:
+                logging.debug("Entering vanilla accuracy tester function")
                 accuracy = test_accuracy(
                             sess=sess,
                             model_dict=model_dict,
@@ -246,24 +289,35 @@ def crossvalidate_subjects(parameter, dataLoader, is_voting):
                             y=y_cv
                 )
 
+            logging.warning('Accuracy of leave-out subject is {:.3f}'.format(accuracy*100))  # will not print anything
+
             accuracy_list.append(accuracy)
 
     total_accuracy = float(sum(accuracy_list))/len(cross_subject_dataset) * 100
-    print("Accuracy of the current model on cross-subject is: {:.3f}%".format(total_accuracy))
+    logging.warning("Accuracy of the current model on cross-subject is: {:.3f} percent ".format(total_accuracy))
+    print("Accuracy of the current model on cross-subject is: {:.3f} percent ".format(total_accuracy))
 
     return accuracy_list
 
 
-def main(parameter, mode, is_voting):
+def main(parameter, mode, is_voting, path):
     #Basically, we always perform 'leave-one-out' cross validation
 
     ################################
     # Importing all data
     ################################
-    importerObj = Importer("Datasets/Preprocessed/DB-a")
+    logging.debug("Using the Importer object on the path: {}".format(path))
+    logging.debug("Using the parameter: {}".format(parameter))
+    logging.info("Testing on: {}".format(mode))
+    logging.debug("Using voting: {}".format(is_voting))
+
+    importerObj = Importer(path)
     super_matrix = importerObj.get_super_matrix()
 
     dataLoader = DataLoader(super_matrix)
+
+    logging.debug("The imported super_matrix has shape: {}".format(super_matrix.shape))
+    logging.debug("dataLoader has type: {}".format(type(dataLoader)))
 
     #TODO: create a logging style, such that multiple modes at once can be selected aswell
     if mode=="cross-session":
@@ -273,7 +327,7 @@ def main(parameter, mode, is_voting):
     elif mode=="cross-subject":
         crossvalidate_subjects(parameter, dataLoader, is_voting)
     else:
-        print("No mode specified!")
+        logging.error("No mode (cross-session, cross-subject, intra-session) was specified!")
         sys.exit(11)
 
 
@@ -304,7 +358,11 @@ if __name__ == '__main__':
             'LEARNING_RATE': 0.1
     }
 
+    setup_logging()
 
-    main(test_parameter, mode="cross-subject", is_voting=True)
+
+    path = "Datasets/Preprocessed/DB-a"
+
+    main(paper_parameter, mode="cross-subject", is_voting=True, path=path)
 
 #TODO: If we want pre-training, we must select all subjects for cross-session; pick all but one for pre-training, and apply the not-selected set as done above with the subjects

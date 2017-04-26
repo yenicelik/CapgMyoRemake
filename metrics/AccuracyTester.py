@@ -9,38 +9,45 @@ from datahandler.Importer import *
 from datahandler.DataLoader import *
 import tensorflow as tf
 
+import logging
+logging = logging.getLogger(__name__)
+
 
 
 #TODO: implement a 'sliding' windows over the framesize. Currently it works only to vote over frames of 1000 frames!
+#TODO: remove verbosity
 def voting(sess, model_dict, parameter, X, y, framesize=1000, verbose=False):
-    batchLoder = BatchLoader(X, y, framesize, shuffle=False)
+    logging.debug("Entering voting function")
 
     if 1000 % framesize != 0:
-        print("Framesize not divisible by 1000! Currently is: ", framesize)
+        logging.error("Framesize not divisible by 1000! Currently is: {}".format(framesize))
         sys.exit(11)
 
-
-    #TODO: split by framsizes, or 1000's, such that we can automatically input multiple datasamples
-    split_indices = [i for i in range(framesize, X.shape[0], framesize)]
-
+    batchLoder = BatchLoader(X, y, framesize, shuffle=False)
     predict_list = []
     actual_list = []
-
     epoch_done = False
 
+    #TODO: what exactly do we do here? We vote over multiple frames to get a final, single frame
     while not epoch_done:
+        logging.debug("Starting next voting session")
 
         X_batch, y_batch, epoch_done = batchLoder.load_batch()
 
+        logging.debug("X_batch has shape: {}".format(X_batch.shape))
+        logging.debug("y_batch has shape: {}".format(y_batch.shape))
+
         if not np.array_equal(y_batch, np.full(y_batch.shape, y_batch[0])): #i think it will fail on this part due to the dimensions!
             print("y_batch should be one-dimensional, but is of size: ", y_batch.shape)
-            print("Not all samples are from the same sample! No majority voting possible!")
+            logging.error("y_batch should be one-dimensional, but is of size: ".format(y_batch.shape))
+            logging.error("Not all samples are from the same sample! No majority voting possible!")
             sys.exit(11)
 
-
+        #Do i need this?
         # X_tmp = np.reshape(X_batches[i], (-1, 16, 8))
         # y_tmp = y_batches[i]
 
+        logging.debug("Entering sess.run from within the voting function")
         logit = sess.run(
                             #Describe what we want out of the model
                             [
@@ -54,42 +61,32 @@ def voting(sess, model_dict, parameter, X, y, framesize=1000, verbose=False):
                                 model_dict['isTraining']: False
                             }
         )
+        logging.debug("Finished sess.run from within the voting function")
 
         logit = logit[0]
 
-
-
         predict = np.argmax(logit, axis=1) #should take the maximum value out of all values!
-        if verbose:
-            print("predict is: ", predict)
-            print("predict shape is: ", predict.shape)
+        logging.debug("Predict has shape: {} after choosing the maximum value (argmaxing)".format(predict.shape))
 
         predict = np.bincount(predict)
         predict = np.argmax(predict)
-
-
+        logging.debug("Predict has shape: {} after having majority-voted (taking the most common occurence)".format(predict.shape))
 
         actual = np.bincount(np.argmax(y_batch, axis=1)) #should return a random element which is equivalent to all elements #Do i need to change this / process this?
         actual = np.argmax(actual)
-
-        if verbose:
-            print("actual is: ", actual)
-            print("actual shape is: ", actual.shape)
-
+        logging.debug("Actual has shape: {} after having majority-voted (taking the most common occurence)".format(actual.shape))
 
         predict_list.append(predict)
         actual_list.append(actual)
 
-    # print("Predict is: ", predict_list)
-
-    difference = [1 if pred == act else 0 for pred, act in zip(predict_list, actual_list)]
-    accuracy = (np.sum(difference) / float(X_batch.shape[0]))
+    difference_vector = [1 if pred == act else 0 for pred, act in zip(predict_list, actual_list)]
+    accuracy = (np.sum(difference_vector) / float(len(predict_list)))
 
     ##############################
     # Confusion matrix
     ##############################
-    print("Accuracy is: {:.3f}%".format(accuracy*100))
-    print("Random baseline: {:.3f}%".format(1./32*100))
+    logging.warning("Accuracy is: {:.3f}%".format(accuracy*100))
+    logging.warning("Random baseline: {:.3f}%".format(1./32*100))
 
     return accuracy
 
