@@ -5,154 +5,131 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 
 from datahandler.BatchLoader import BatchLoader
-from datahandler.Importer import *
 from datahandler.DataLoader import *
-import tensorflow as tf
 
 import logging
 logging = logging.getLogger(__name__)
 
-
-
-#TODO: implement a 'sliding' windows over the framesize. Currently it works only to vote over frames of 1000 frames!
-#TODO: remove verbosity
-def voting(sess, model_dict, parameter, X, y, framesize=1000, verbose=False):
-    logging.debug("Entering voting function")
-
-    if 1000 % framesize != 0:
-        logging.error("Framesize not divisible by 1000! Currently is: {}".format(framesize))
-        sys.exit(11)
-
-    batchLoder = BatchLoader(X, y, framesize, shuffle=False)
+def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, model_dict=None):
+    """
+    :param X: The data for which labels should be predicted / The test data
+    :param y: The true labels of the data
+    :param parameter: The common parameter dictionary
+    :param voting_window: Over how many frames voting should occur. Default 1000. Maximum 1000.
+    :param sess: The session (reference to the tensorflow session)
+    :param model_dict: The model dictionary (reference to the tensorflow object)
+    :return: The accuracy of the model.
+    """
+    logging.debug("-> {} function".format(test_model_accuracy.__name__))
+    #We currently only take the first 'voting_window' number of frames, vote based on them. We ignore the result
+    batchLoder = BatchLoader(X, y, 1000, shuffle=False) #we must split the data by 1000's
     predict_list = []
     actual_list = []
     epoch_done = False
 
-    #TODO: what exactly do we do here? We vote over multiple frames to get a final, single frame
+    if voting_window > 1000:
+        logging.error("Voting window {} is too big (max 1000)".format(voting_window))
+        sys.exit(69)
+    if X.shape[0] != y.shape[0]:
+        logging.error("X.shape {} is different from y.shape {}".format(X.shape[0], y.shape[0]))
+        sys.exit(69)
+    if X.shape[0] % 1000 != 0 or y.shape[0] % 1000 != 0:
+        logging.error("X {} or y {} are not divisible by 1000!".format(X.shape[0], y.shape[0]))
+
     while not epoch_done:
         logging.debug("Starting next voting session")
-
         X_batch, y_batch, epoch_done = batchLoder.load_batch()
+        X_batch = X_batch[:voting_window]
+        y_batch = y_batch[:voting_window]
+        if not ((y_batch - y_batch[0,:]) == 0).all():
+            logging.error("y_batch be equal everywhere, but is not. As such, we have different gestures collected! y_batch: {}".format(y_batch))
+            sys.exit(69)
 
-        logging.debug("X_batch has shape: {}".format(X_batch.shape))
-        logging.debug("y_batch has shape: {}".format(y_batch.shape))
+        #Running function
+        logging.debug("-> sess.run function")
+        try:
+            loss = np.random.randint(0, 1000)
+            logit = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+        except Exception as e:
+            logging.error("Tensorflow threw an error: {}".format(e))
+        logging.debug("<- sess.run function")
 
-        if not np.array_equal(y_batch, np.full(y_batch.shape, y_batch[0])): #i think it will fail on this part due to the dimensions!
-            print("y_batch should be one-dimensional, but is of size: ", y_batch.shape)
-            logging.error("y_batch should be one-dimensional, but is of size: ".format(y_batch.shape))
-            logging.error("Not all samples are from the same sample! No majority voting possible!")
-            sys.exit(11)
-
-        #Do i need this?
-        # X_tmp = np.reshape(X_batches[i], (-1, 16, 8))
-        # y_tmp = y_batches[i]
-
-        logging.debug("Entering sess.run from within the voting function")
-        logit = sess.run(
-                            #Describe what we want out of the model
-                            [
-                                model_dict['predict'],
-                            ],
-                            #Describe what we input in the model
-                            feed_dict = {
-                                model_dict['X_input']: X_batch,
-                                model_dict['keepProb']: 1.,
-                                model_dict['learningRate']: parameter['LEARNING_RATE'],
-                                model_dict['isTraining']: False
-                            }
-        )
-        logging.debug("Finished sess.run from within the voting function")
-
-        logit = logit[0]
-
-        predict = np.argmax(logit, axis=1) #should take the maximum value out of all values!
-        logging.debug("Predict has shape: {} after choosing the maximum value (argmaxing)".format(predict.shape))
-
+        #Majority-Voting
+        predict = np.argmax(logit, axis=1)
         predict = np.bincount(predict)
         predict = np.argmax(predict)
-        logging.debug("Predict has shape: {} after having majority-voted (taking the most common occurence)".format(predict.shape))
-
         actual = np.bincount(np.argmax(y_batch, axis=1)) #should return a random element which is equivalent to all elements #Do i need to change this / process this?
         actual = np.argmax(actual)
-        logging.debug("Actual has shape: {} after having majority-voted (taking the most common occurence)".format(actual.shape))
-
         predict_list.append(predict)
         actual_list.append(actual)
+
+    if len(predict_list) != len(actual_list):
+        logging.error("predict_list length {} is not equal to actual_list length {}".format(len(predict_list), len(actual_list)))
 
     difference_vector = [1 if pred == act else 0 for pred, act in zip(predict_list, actual_list)]
     accuracy = (np.sum(difference_vector) / float(len(predict_list)))
 
-    ##############################
-    # Confusion matrix
-    ##############################
-    logging.warning("Accuracy is: {:.3f}%".format(accuracy*100))
-    logging.warning("Random baseline: {:.3f}%".format(1./32*100))
+    logging.warning("Voting accuracy over {} frames is: {:.3f}%".format(voting_window, accuracy*100))
+    logging.warning("Random baseline: {:.3f}%".format(1./10*100))
 
     return accuracy
 
 
-
-#TODO: implement majority-voting over time-frame
-def test_accuracy(sess, model_dict, parameter, X, y, verbose=False, show_confusion_matrix=False):
+def test_model_accuracy(X, y, parameter, show_confusion_matrix, sess=None, model_dict=None):
     """
-    :param sess: The tensorflow session that we are going to use.
-    :param model_dict: The model-dictionary that we need to refer to as the tensorflow-graph
-    :param parameter: The parameter dictionary, holding different values needed.
-    :param X: The test-set.
-    :param y: The respective labels of the test-set.
-    :param verbose: Whether the sample prediction and actual y-values should be printed.
-    :return: Nothing
+    :param X: The data for which labels should be predicted / The test data
+    :param y: The true labels of the data
+    :param parameter: The common parameter dictionary
+    :param show_confusion_matrix: True or False; Whether or not the confusion matrix should be shown
+    :param sess: The session (reference to the tensorflow session)
+    :param model_dict: The model dictionary (reference to the tensorflow object)
+    :return: The model accuracy
     """
-    plt.interactive(False)
-    plt.ion()
-    #
-    # plt.plot([1, 2, 3])
-    # plt.show()
+    logging.debug("-> {} function".format(test_model_accuracy.__name__))
 
-    #TODO: why should the batch_size be specified? I mean, in the end we want the entire X to be tested, right? at least the entire X that was input into this function..
-    batchLoader = BatchLoader(X, y, parameter['BATCH_SIZE'], shuffle=False)
-    X_batch, y_batch, epoch_done = batchLoader.load_batch()
+    #We run the model
+    logging.debug("-> sess.run function")
+    #TODO: placeholders that are going to be replaced by the actual values
+    #TODO: place an exception handler anywhere we call tensorflow functions, such that we log these
+    try:
+        loss = np.random.randint(0, 1000)
+        logits = np.random.rand(X.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+    except Exception as e:
+        logging.error("Tensorflow threw an error: {}".format(e))
 
-    loss, logits = sess.run(
-                        #Describe what we want out of the model
-                        [
-                            model_dict['loss'],
-                            model_dict['predict'],
-                        ],
-                        #Describe what we input in the model
-                        feed_dict = {
-                            model_dict['X_input']: X_batch,
-                            model_dict['y_input']: y_batch,
-                            model_dict['keepProb']: 1.,
-                            model_dict['learningRate']: parameter['LEARNING_RATE'],
-                            model_dict['isTraining']: False
-                        }
-                    )
+    logging.debug("<- sess.run function")
 
+    #Both reduced from one-hot to arg-vector
     predict = np.argmax(logits, axis=1)
-    actual = np.argmax(y_batch, axis=1)
+    actual = np.argmax(y, axis=1)
+    if len(predict) != len(actual):
+        logging.error("Predict length {} doesn't equal actualy length {}".format(len(predict), len(actual)))
+        sys.exit(69)
+    difference_vector = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
+    accuracy = np.sum(difference_vector) / float(len(difference_vector))
+    logging.info("Accuracy is: {:.3f}%".format(accuracy*100))
+    logging.info("Random baseline: {:.3f}%".format(1./10*100))
 
-    if verbose:
-        print("predict is: ", predict)
-        print("actual is: ", actual)
-
-    difference = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
-    accuracy = (np.sum(difference) / float(X_batch.shape[0]))
-
-    ##############################
-    # Confusion matrix
-    ##############################
-    print("Accuracy is: {:.3f}%".format(accuracy*100))
-    print("Random baseline: {:.3f}%".format(1./32*100))
-
+    #Confusion Matrix
     if show_confusion_matrix:
         cm = confusion_matrix(actual, predict)
+        logging.debug("Showing confusion matrix: {}".format(cm))
         fig, ax = plt.subplots()
         ax.matshow(cm, cmap=plt.cm.Blues)
         for (i, j), z in np.ndenumerate(cm):
             ax.text(j, i, '{:d}'.format(z), ha='center', va='center')
         plt.show(block=True)
 
+    logging.debug("<- {} function".format(test_model_accuracy.__name__))
     return accuracy
 
 
+
+if __name__ == '__main__':
+    dataLoader = DataLoader("../datahandler/Datasets/Preprocessed/DB-a")
+    X_pretrain, y_pretrain, cross_session_dataset = dataLoader.get_cross_session_dataset_given_subject_id(1)
+
+    parameter = {
+        'BATCH_SIZE': 500
+    }
+    test_model_accuracy_voting(X_pretrain, y_pretrain, parameter)

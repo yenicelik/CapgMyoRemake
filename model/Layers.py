@@ -17,6 +17,7 @@ def layer_conv(inputs, W, b, is_training):
                             strides=[1, 1, 1, 1],
                             padding='SAME'
                         )
+    #TODO: check if add-bias term is needed, or if this is ok?
     inputs += b
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
@@ -57,7 +58,7 @@ def layer_local(inputs, W, b, is_training):
     :param is_training: Whether the current session is used for training (True) or for testing (False)
     :return: A tensorflow layer object
     """
-
+    #TODO: add-biad term needed, or addition ok? tf.nn.bias_add(input, bias)
     inputs = tf.multiply(inputs, W) + b
     inputs = tf.contrib.layers.batch_norm(
                             inputs,
@@ -68,4 +69,3 @@ def layer_local(inputs, W, b, is_training):
     inputs = tf.nn.relu(inputs)
 
     return inputs
-
