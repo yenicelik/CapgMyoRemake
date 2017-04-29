@@ -3,6 +3,7 @@ from __future__ import print_function
 from model.Layers import *
 from datahandler.DataLoader import DataLoader
 
+import sys
 import logging
 logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
@@ -12,6 +13,7 @@ def print_layershape(layername, inputs):
     print("\t\t\t\t".format(layername, str(inputs.get_shape()) ))
     logging.info("{} \t\t\t\t {}".format(layername, str(inputs.get_shape())))
 
+
 #TODO: this one-hot dimension should maybe be a global variable!
 #TODO: have a more robust load for the individual weights. That means, have a loader object that detects the variables by names, and individually puts them back. if no variable is found, initialize the variable from scratch
 def init_graph():
@@ -20,14 +22,13 @@ def init_graph():
     :return: The initized weights-dictionary, bias-dictionary and a model-dictionary that captures all input and output of the created graph.
     """
     logging.debug("-> {} function".format(init_graph.__name__))
-    W, b, global_step = initialize_parameters()
+    W, b, global_step, tmpval = initialize_parameters()
 
     (X_input,
      y_input,
      loss,
      predict,
      updateModel,
-     global_step,
      keep_prob,
      learning_rate,
      is_training) = build_model(W, b, global_step)
@@ -46,44 +47,76 @@ def init_graph():
 
     logging.info("Model dictionary looks like: {}".format(model_dict))
     logging.debug("<- {} function".format(init_graph.__name__))
-    return W, b, model_dict
+    return W, b, model_dict, tmpval
 
 
 def initialize_parameters():
     logging.debug("-> {} function".format(initialize_parameters.__name__))
 
     #Global variable to capture the number of steps made
-    global_step = tf.Variable(1, trainable=False, name='global_step')
+    global_step = tf.get_variable("global_step", shape=[], trainable=False, initializer=tf.constant_initializer(1), dtype=tf.int64)
 
     #TODO FUTURE: Time-video as input, for possible Seq2Seq model
+    #TODO: Add "regularizer=None"
     Weights = {
-                #Is the last number the batch_size? I think it is..
-                "W_Conv1": tf.Variable(tf.random_normal([3, 3, 1, 64], 0.00, 0.01), name="W_Conv1"),
-                "W_Conv2": tf.Variable(tf.random_normal([3, 3, 64, 64], 0.00, 0.01), name="W_Conv2"),
-                #not sure if we sum over all 64 channels?!
-                "W_Local1": tf.Variable(tf.random_normal([1, 16 * 8 * 64], 0.00, 0.01), name="W_Local1"),
-                "W_Local2": tf.Variable(tf.random_normal([1, 16 * 8 * 64], 0.00, 0.01), name="W_Local2"),
-                "W_Affine1": tf.Variable(tf.random_normal([16*8*64, 512], 0.00, 0.01), name="W_Affine1"),
-                "W_Affine2": tf.Variable(tf.random_normal([512, 128], 0.00, 0.01), name="W_Affine2"),
-                "W_Affine3": tf.Variable(tf.random_normal([128, 10], 0.00, 0.01), name="W_Affine3"),
+        #Is the last number the batch_size? I think it is..
+        "W_Conv1": tf.get_variable("W_Conv1", shape=[3, 3, 1, 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "W_Conv2": tf.get_variable("W_Conv2", shape=[3, 3, 64, 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        #not sure if we sum over all 64 channels?!
+        "W_Local1": tf.get_variable("W_Local1", shape=[1, 16 * 8 * 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "W_Local2": tf.get_variable("W_Local2", shape=[1, 16 * 8 * 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "W_Affine1": tf.get_variable("W_Affine1", shape=[16*8*64, 512],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "W_Affine2": tf.get_variable("W_Affine2", shape=[512, 128],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "W_Affine3": tf.get_variable("W_Affine3", shape=[128, 10],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        )
     }
 
     #TODO: Do local layers have a bias term?
     Bias = {
-                "b_Conv1": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv1"),
-                "b_Conv2": tf.Variable(tf.random_normal([1, 16, 8, 64], 0.00, 0.01), name="b_Conv2"),
-                "b_Local1": tf.Variable(tf.random_normal([1, 8192], 0.00, 0.01), name="b_Local1"),
-                "b_Local2": tf.Variable(tf.random_normal([1, 8192], 0.00, 0.01), name="b_Local2"),
-                "b_Affine1": tf.Variable(tf.random_normal([1, 512], 0.00, 0.01), name="b_Affine1"),
-                "b_Affine2": tf.Variable(tf.random_normal([1, 128], 0.00, 0.01), name="b_Affine2"),
-                "b_Affine3": tf.Variable(tf.random_normal([1, 10], 0.00, 0.01), name="b_Affine3")
+        "b_Conv1": tf.get_variable("b_Conv1", shape=[1, 16, 8, 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Conv2": tf.get_variable("b_Conv2", shape=[1, 16, 8, 64],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Local1": tf.get_variable("b_Local1", shape=[1, 8192],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Local2": tf.get_variable("b_Local2", shape=[1, 8192],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Affine1": tf.get_variable("b_Affine1", shape=[1, 512],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Affine2": tf.get_variable("b_Affine2", shape=[1, 128],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        ),
+        "b_Affine3": tf.get_variable("b_Affine3", shape=[1, 10],
+                initializer=tf.random_normal_initializer(mean=0.00, stddev=0.01),
+        )
     }
 
     logging.info("Weights are of shape: {}".format([(key, str(w.get_shape())) for key, w in Weights.iteritems()]))
     logging.info("bias are of shape: {}".format([(key, str(b.get_shape())) for key, b in Bias.iteritems()]))
 
+    tmpval = None
+    # tmpval = tf.get_variable("new_var", shape=[1], initializer=tf.constant_initializer(0.1))
+
     logging.debug("<- {} function".format(initialize_parameters.__name__))
-    return Weights, Bias, global_step
+    return Weights, Bias, global_step, tmpval
 
 
 def build_model(W, b, global_step):
@@ -189,14 +222,14 @@ def build_model(W, b, global_step):
     ## Output: Loss functions and model trainers
     loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=predict)
     trainer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
-    updateModel = trainer.minimize(loss)
+    updateModel = trainer.minimize(loss, global_step=global_step)
 
     #To see how many steps we've been through (this will be saved in-between sessions)
-    increment_global_step = tf.assign(global_step, global_step+1)
+    # increment_global_step = tf.assign(global_step, global_step+1)
 
     #We must return 'references' to the individual objects
     logging.debug("<- {} function".format(build_model.__name__))
-    return X_input, y_input, loss, predict, updateModel, increment_global_step, keep_prob, learning_rate, is_training
+    return X_input, y_input, loss, predict, updateModel, keep_prob, learning_rate, is_training
 
 
 if __name__ == "__main__":
@@ -204,7 +237,7 @@ if __name__ == "__main__":
     dataLoader = DataLoader("../datahandler/Datasets/Preprocessed/DB-a")
     X_train, y_train, X_test, y_test = dataLoader.get_odd_even_trials()
 
-    W, b, model_dict = init_graph()
+    W, b, model_dict, tmpval= init_graph()
 
     parameter = {
         'LEARNING_RATE': 500,
@@ -212,13 +245,13 @@ if __name__ == "__main__":
         'BATCH_SIZE': 1000
     }
 
-    init_op = tf.initialize_all_variables()
+    init_op = tf.global_variables_initializer()
 
     with tf.Session() as sess:
         logging.debug("Entering session")
         sess.run(init_op)
         logging.debug("Initial_op success. Now running session on data")
-        sess.run(
+        loss, predict, _, gst1 = sess.run(
             # Describe what we want out of the model
             [
                 model_dict['loss'],
@@ -229,14 +262,53 @@ if __name__ == "__main__":
             ],
             # Describe what we input in the model
             feed_dict={
-                model_dict['X_input']: X_train,
-                model_dict['y_input']: y_train,
+                model_dict['X_input']: X_train[:2000, :],
+                model_dict['y_input']: y_train[:2000],
+                model_dict['keepProb']: 0.5,
+                model_dict['learningRate']: parameter['LEARNING_RATE'],
+                model_dict['isTraining']: True
+            }
+        )
+        loss, predict, _, gst2 = sess.run(
+            # Describe what we want out of the model
+            [
+                model_dict['loss'],
+                model_dict['predict'],
+                model_dict['updateModel'],
+                model_dict['globalStepTensor']
+
+            ],
+            # Describe what we input in the model
+            feed_dict={
+                model_dict['X_input']: X_train[:2000, :],
+                model_dict['y_input']: y_train[:2000],
+                model_dict['keepProb']: 0.5,
+                model_dict['learningRate']: parameter['LEARNING_RATE'],
+                model_dict['isTraining']: True
+            }
+        )
+        loss, predict, _, gst3 = sess.run(
+            # Describe what we want out of the model
+            [
+                model_dict['loss'],
+                model_dict['predict'],
+                model_dict['updateModel'],
+                model_dict['globalStepTensor']
+
+            ],
+            # Describe what we input in the model
+            feed_dict={
+                model_dict['X_input']: X_train[:2000, :],
+                model_dict['y_input']: y_train[:2000],
                 model_dict['keepProb']: 0.5,
                 model_dict['learningRate']: parameter['LEARNING_RATE'],
                 model_dict['isTraining']: True
             }
         )
         logging.debug("Run on data successful")
+        if not (gst1 == gst2-1 ==gst3-2):
+            logging.error("Globa step does not increase. This might mean that the model has an error! gst1 {} gst2 {} gst3 {}".format(gst1, gst2, gst3))
+            sys.exit(69)
 
 
 
