@@ -5,7 +5,6 @@ from datahandler.DataLoader import DataLoader
 
 import sys
 import logging
-logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
 
 

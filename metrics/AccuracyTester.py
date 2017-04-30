@@ -10,7 +10,6 @@ from datahandler.BatchLoader import BatchLoader
 from datahandler.DataLoader import *
 
 import logging
-logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
 
 def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, model_dict=None):

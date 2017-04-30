@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="28f5c851-9d10-40ed-a60d-9eb1dd61185d" name="Default" comment="Debugged a bug where loss_list was re-initialized for every epoch">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging.json" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/saves/checkpoint" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/saves/model.ckpt-73523.data-00000-of-00001" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/saves/model.ckpt-73523.index" afterPath="" />
@@ -31,8 +32,12 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/saves/model.ckpt.index" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/saves/model.ckpt.meta" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/train.py" afterPath="$PROJECT_DIR$/model/train.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/naive_convergence_tester.py" afterPath="$PROJECT_DIR$/naive_convergence_tester.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crossvalidate.py" afterPath="$PROJECT_DIR$/crossvalidate.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datahandler/BatchLoader.py" afterPath="$PROJECT_DIR$/datahandler/BatchLoader.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datahandler/DataLoader.py" afterPath="$PROJECT_DIR$/datahandler/DataLoader.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datahandler/TFSaver.py" afterPath="$PROJECT_DIR$/datahandler/TFSaver.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/metrics/AccuracyTester.py" afterPath="$PROJECT_DIR$/metrics/AccuracyTester.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/BuildGraph.py" afterPath="$PROJECT_DIR$/model/BuildGraph.py" />
     </list>
     <ignored path="CapgMyoRemake.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,13 +53,13 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/CapgMyoRemake$DataLoader__1_.coverage" NAME="DataLoader (1) Coverage Results" MODIFIED="1492555903470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$CapgMyo.coverage" NAME="CapgMyo Coverage Results" MODIFIED="1493208166552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CapgMyoRemake$train.coverage" NAME="train Coverage Results" MODIFIED="1493376499815" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/CapgMyoRemake$train.coverage" NAME="train Coverage Results" MODIFIED="1493544671140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$Importer.coverage" NAME="Importer Coverage Results" MODIFIED="1493245713623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$TFSaver.coverage" NAME="TFSaver Coverage Results" MODIFIED="1493505744000" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$naive_convergence_tester.coverage" NAME="naive_convergence_tester Coverage Results" MODIFIED="1493543058030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$BuildGraph.coverage" NAME="BuildGraph Coverage Results" MODIFIED="1493500199289" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$AccuracyTester.coverage" NAME="AccuracyTester Coverage Results" MODIFIED="1493540327840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/metrics" />
-    <SUITE FILE_PATH="coverage/CapgMyoRemake$crossvalidate.coverage" NAME="crossvalidate Coverage Results" MODIFIED="1493370058612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CapgMyoRemake$crossvalidate.coverage" NAME="crossvalidate Coverage Results" MODIFIED="1493554106700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$Sampler.coverage" NAME="Sampler Coverage Results" MODIFIED="1493246278907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$DataLoader.coverage" NAME="DataLoader Coverage Results" MODIFIED="1493369827322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$BatchLoader.coverage" NAME="BatchLoader Coverage Results" MODIFIED="1493316545913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
@@ -75,24 +80,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DataLoader.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/datahandler/DataLoader.py">
+      <file leaf-file-name="crossvalidate.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/crossvalidate.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="9" selection-end-column="37" />
+              <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-                <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crossvalidate.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/crossvalidate.py">
+      <file leaf-file-name="logging.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/logging.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.5744681">
+              <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccuracyTester.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/metrics/AccuracyTester.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="162" column="35" selection-start-line="162" selection-start-column="35" selection-end-line="162" selection-end-column="35" />
+              <caret line="11" column="14" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -104,7 +118,7 @@
         <entry file="file://$PROJECT_DIR$/model/BuildGraph.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="7" selection-end-column="64" />
+              <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -112,14 +126,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="naive_convergence_tester.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/naive_convergence_tester.py">
+      <file leaf-file-name="Layers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/Layers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6356275">
-              <caret line="52" column="54" selection-start-line="52" selection-start-column="54" selection-end-line="52" selection-end-column="54" />
-              <folding>
-                <element signature="e#0#45#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -128,31 +140,7 @@
         <entry file="file://$PROJECT_DIR$/model/train.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="104" column="68" selection-start-line="104" selection-start-column="68" selection-end-line="104" selection-end-column="68" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AccuracyTester.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/metrics/AccuracyTester.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="7" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="example.log" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/metrics/example.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="20708" column="35" selection-start-line="20708" selection-start-column="35" selection-end-line="20708" selection-end-column="35" />
+              <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -162,10 +150,20 @@
         <entry file="file://$PROJECT_DIR$/datahandler/TFSaver.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="74" selection-start-line="36" selection-start-column="74" selection-end-line="36" selection-end-column="74" />
+              <caret line="11" column="43" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/metrics/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -200,23 +198,23 @@
         <option value="$PROJECT_DIR$/info.log" />
         <option value="$PROJECT_DIR$/train.py" />
         <option value="$PROJECT_DIR$/CapgMyo.py" />
-        <option value="$PROJECT_DIR$/logging.json" />
         <option value="$PROJECT_DIR$/DataLoader.py" />
         <option value="$PROJECT_DIR$/datahandler/Sampler.py" />
-        <option value="$PROJECT_DIR$/datahandler/BatchLoader.py" />
         <option value="$PROJECT_DIR$/datahandler/Importer.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/datahandler/DataLoader.py" />
         <option value="$PROJECT_DIR$/model/Layers.py" />
-        <option value="$PROJECT_DIR$/crossvalidate.py" />
-        <option value="$PROJECT_DIR$/model/BuildGraph.py" />
         <option value="$PROJECT_DIR$/datahandler/example.log" />
-        <option value="$PROJECT_DIR$/datahandler/TFSaver.py" />
-        <option value="$PROJECT_DIR$/example.log" />
-        <option value="$PROJECT_DIR$/metrics/AccuracyTester.py" />
         <option value="$PROJECT_DIR$/metrics/example.log" />
-        <option value="$PROJECT_DIR$/model/train.py" />
         <option value="$PROJECT_DIR$/naive_convergence_tester.py" />
+        <option value="$PROJECT_DIR$/model/train.py" />
+        <option value="$PROJECT_DIR$/example.log" />
+        <option value="$PROJECT_DIR$/logging.json" />
+        <option value="$PROJECT_DIR$/model/BuildGraph.py" />
+        <option value="$PROJECT_DIR$/datahandler/TFSaver.py" />
+        <option value="$PROJECT_DIR$/datahandler/BatchLoader.py" />
+        <option value="$PROJECT_DIR$/datahandler/DataLoader.py" />
+        <option value="$PROJECT_DIR$/metrics/AccuracyTester.py" />
+        <option value="$PROJECT_DIR$/crossvalidate.py" />
       </list>
     </option>
   </component>
@@ -333,6 +331,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="metrics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CapgMyoRemake" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CapgMyoRemake" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="datahandler" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -344,7 +356,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -372,7 +384,7 @@
       <recent name="$PROJECT_DIR$/model" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.naive_convergence_tester">
+  <component name="RunManager" selected="Python.crossvalidate">
     <configuration default="false" name="train" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -387,24 +399,6 @@
       <module name="CapgMyoRemake" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/train.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="BuildGraph" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CapgMyoRemake" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/BuildGraph.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -459,6 +453,24 @@
       <module name="CapgMyoRemake" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/metrics/AccuracyTester.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="crossvalidate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CapgMyoRemake" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/crossvalidate.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -658,18 +670,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.train" />
-      <item index="1" class="java.lang.String" itemvalue="Python.BuildGraph" />
-      <item index="2" class="java.lang.String" itemvalue="Python.TFSaver" />
-      <item index="3" class="java.lang.String" itemvalue="Python.naive_convergence_tester" />
-      <item index="4" class="java.lang.String" itemvalue="Python.AccuracyTester" />
+      <item index="1" class="java.lang.String" itemvalue="Python.TFSaver" />
+      <item index="2" class="java.lang.String" itemvalue="Python.naive_convergence_tester" />
+      <item index="3" class="java.lang.String" itemvalue="Python.AccuracyTester" />
+      <item index="4" class="java.lang.String" itemvalue="Python.crossvalidate" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.naive_convergence_tester" />
-        <item index="1" class="java.lang.String" itemvalue="Python.AccuracyTester" />
-        <item index="2" class="java.lang.String" itemvalue="Python.TFSaver" />
-        <item index="3" class="java.lang.String" itemvalue="Python.BuildGraph" />
-        <item index="4" class="java.lang.String" itemvalue="Python.train" />
+        <item index="0" class="java.lang.String" itemvalue="Python.crossvalidate" />
+        <item index="1" class="java.lang.String" itemvalue="Python.train" />
+        <item index="2" class="java.lang.String" itemvalue="Python.naive_convergence_tester" />
+        <item index="3" class="java.lang.String" itemvalue="Python.AccuracyTester" />
+        <item index="4" class="java.lang.String" itemvalue="Python.TFSaver" />
       </list>
     </recent_temporary>
   </component>
@@ -840,7 +852,19 @@
       <option name="project" value="LOCAL" />
       <updated>1493542851898</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="I found why it 'didn't converge'. I was just studip once more. Session was not used, but random guessing was.">
+      <created>1493543106120</created>
+      <option name="number" value="00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1493543106120</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Ready to set up intra-session on AlFRED">
+      <created>1493553819986</created>
+      <option name="number" value="00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1493553819987</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -856,14 +880,14 @@
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.134895" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2657512" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49030694" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2849315" sideWeight="0.2552504" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2849315" sideWeight="0.37883684" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49353796" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.49676898" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2849315" sideWeight="0.7447496" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2849315" sideWeight="0.6211632" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32786885" sideWeight="0.48707592" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -891,8 +915,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implemented layer without local layers; Loaded Importer" />
-    <MESSAGE value="First successful model run. Now, need to import the data correctly, and then modify the model to capture the real model of the paper. Finally, need to create a measure for the accuracy (using cross-validation e.g.)" />
     <MESSAGE value="Importer class seems to be done" />
     <MESSAGE value="Before refactoring. Refactoring is needed because we cannot save the weights in-between sessions yet, and we should look at how difference people implemented tensorflow models." />
     <MESSAGE value="Debugged the 'accuracy shows ones only' bug&#10;" />
@@ -916,7 +938,9 @@
     <MESSAGE value="Reimplemented from Scratch, a first version that has 'verified' individual parts. Need to connect those individual parts now. Learned a lot on what to do better next time." />
     <MESSAGE value="Saver implemented. Need to test convergence. Need to implement step-function where needed." />
     <MESSAGE value="Convergence_tester implemented. I suspect we have too little training data to test for accuracy-increase, but the model seems to be implemented the way it is described in the paper. As such, we will implement sess.run within training, upload and then debug if we have convergence problems." />
-    <option name="LAST_COMMIT_MESSAGE" value="Convergence_tester implemented. I suspect we have too little training data to test for accuracy-increase, but the model seems to be implemented the way it is described in the paper. As such, we will implement sess.run within training, upload and then debug if we have convergence problems." />
+    <MESSAGE value="I found why it 'didn't converge'. I was just studip once more. Session was not used, but random guessing was." />
+    <MESSAGE value="Ready to set up intra-session on AlFRED" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ready to set up intra-session on AlFRED" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -945,20 +969,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/example.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/datahandler/Importer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="144" column="24" selection-start-line="144" selection-start-column="24" selection-end-line="144" selection-end-column="24" />
           <folding>
-            <element signature="e#0#37#0" expanded="false" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -969,7 +985,7 @@
           <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="8" selection-end-column="64" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
+            <marker date="1493553975000" expanded="true" signature="258:9418" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -988,9 +1004,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="120" column="4" selection-start-line="120" selection-start-column="4" selection-end-line="124" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1019,7 +1033,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="144" column="24" selection-start-line="144" selection-start-column="24" selection-end-line="144" selection-end-column="24" />
           <folding>
-            <element signature="e#0#37#0" expanded="false" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1030,7 +1044,7 @@
           <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="8" selection-end-column="64" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
+            <marker date="1493553975000" expanded="true" signature="258:9418" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1049,9 +1063,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="120" column="4" selection-start-line="120" selection-start-column="4" selection-end-line="124" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1087,7 +1099,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
           <folding>
-            <element signature="e#0#37#0" expanded="false" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1096,6 +1108,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1105,7 +1120,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
+            <marker date="1493553975000" expanded="true" signature="258:9418" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1114,6 +1129,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="54" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1139,7 +1157,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
           <folding>
-            <element signature="e#0#37#0" expanded="false" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1148,6 +1166,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1157,7 +1178,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
+            <marker date="1493553975000" expanded="true" signature="258:9418" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1166,6 +1187,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="54" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1207,27 +1231,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/metrics/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/Sampler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/BatchLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="26" selection-start-line="26" selection-start-column="8" selection-end-line="31" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.6666665">
@@ -1242,48 +1245,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/Layers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7301205">
-          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/Importer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.259259">
-          <caret line="143" column="12" selection-start-line="143" selection-start-column="12" selection-end-line="143" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#37#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/DataLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="9" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <marker date="1493369781000" expanded="true" signature="323:9483" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/tensorflow/python/training/saver.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33173078">
           <caret line="1071" column="0" selection-start-line="1071" selection-start-column="0" selection-end-line="1071" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/crossvalidate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="162" column="35" selection-start-line="162" selection-start-column="35" selection-end-line="162" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1294,24 +1259,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/example.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-131.95259">
-          <caret line="3011" column="0" selection-start-line="3011" selection-start-column="0" selection-end-line="3011" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/BuildGraph.py">
+    <entry file="file://$PROJECT_DIR$/datahandler/BatchLoader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="7" selection-end-column="64" />
+          <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/example.log">
+    <entry file="file://$PROJECT_DIR$/datahandler/DataLoader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <marker date="1493553975000" expanded="true" signature="258:9418" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datahandler/Importer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datahandler/Sampler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datahandler/TFSaver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="43" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metrics/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1319,59 +1318,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/example.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.20967741">
-          <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/TFSaver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="74" selection-start-line="36" selection-start-column="74" selection-end-line="36" selection-end-column="74" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metrics/example.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20708" column="35" selection-start-line="20708" selection-start-column="35" selection-end-line="20708" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/metrics/AccuracyTester.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="7" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+          <caret line="11" column="14" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/BuildGraph.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/Layers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="104" column="68" selection-start-line="104" selection-start-column="68" selection-end-line="104" selection-end-column="68" />
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/naive_convergence_tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="20" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crossvalidate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/naive_convergence_tester.py">
+    <entry file="file://$PROJECT_DIR$/logging.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6356275">
-          <caret line="52" column="54" selection-start-line="52" selection-start-column="54" selection-end-line="52" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.5744681">
+          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>

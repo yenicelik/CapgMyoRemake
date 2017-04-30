@@ -6,7 +6,6 @@ import numpy as np
 import sys
 
 import logging
-logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
 
 

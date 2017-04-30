@@ -5,7 +5,6 @@ import sys
 import numpy as np
 
 import logging
-logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
 
 from model.BuildGraph import *
