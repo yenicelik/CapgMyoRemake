@@ -48,7 +48,13 @@ def main():
             )
 
             if i % 10 == 0:
-                acc = test_model_accuracy(X_test[i*500:(i+1)*500], y_test[i*500:(i+1)*500], parameter, show_confusion_matrix=False)
+                acc = test_model_accuracy(
+                    X_test[i*500+1000:(i+1)*500+1000],
+                    y_test[i*500+1000:(i+1)*500+1000],
+                    parameter,
+                    sess=sess,
+                    model_dict=model_dict,
+                    show_confusion_matrix=False)
                 acc_list.append(acc)
                 #print("Accuracy at step {} is: {}".format(i, acc * 100))
                 print("Accuracy total is: {}".format(sum(acc_list)/len(acc_list)*100))

@@ -79,8 +79,28 @@ def run_epoch(X, y, parameter, cur_epoch, sess=None, model_dict=None):
             print("y_batch.shape: {}".format(y.shape))
             print("learning_rate: {}".format(learning_rate))
             print("Leaving running epoch!")
-            loss = np.random.randint(0, 1000)
-            logit = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+            if sess is None:
+                loss = np.random.randint(0, 1000)
+                logit = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+            else:
+                loss, predict, _, _ = sess.run(
+                # Describe what we want out of the model
+                [
+                    model_dict['loss'],
+                    model_dict['predict'],
+                    model_dict['updateModel'],
+                    model_dict['globalStepTensor']
+
+                ],
+                # Describe what we input in the model
+                feed_dict={
+                    model_dict['X_input']: X_train[i*500:(i+1)*500, :],
+                    model_dict['y_input']: y_train[i*500:(i+1)*500],
+                    model_dict['keepProb']: 0.5,
+                    model_dict['learningRate']: parameter['LEARNING_RATE'],
+                    model_dict['isTraining']: True
+                }
+            )
         except Exception as e:
             logging.error("Tensorflow threw an error: {}".format(e))
 
