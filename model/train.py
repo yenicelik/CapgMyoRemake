@@ -94,9 +94,6 @@ def run_epoch(X, y, parameter, cur_epoch, sess=None, model_dict=None):
     return loss_list
 
 
-def step():
-    pass
-
 
 def adapt_lr(epoch, para_lr):
     logging.debug("-> {} function".format(adapt_lr.__name__))

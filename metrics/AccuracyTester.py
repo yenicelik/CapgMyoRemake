@@ -3,11 +3,14 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
+import tensorflow as tf
+from model.BuildGraph import *
 
 from datahandler.BatchLoader import BatchLoader
 from datahandler.DataLoader import *
 
 import logging
+logging.basicConfig(filename='example.log', level=logging.DEBUG)
 logging = logging.getLogger(__name__)
 
 def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, model_dict=None):
@@ -16,7 +19,7 @@ def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, m
     :param y: The true labels of the data
     :param parameter: The common parameter dictionary
     :param voting_window: Over how many frames voting should occur. Default 1000. Maximum 1000.
-    :param sess: The session (reference to the tensorflow session)
+    :param sess: The session (reference to the tensorflow session). If None, random values are generated to test the correctness of the function
     :param model_dict: The model dictionary (reference to the tensorflow object)
     :return: The accuracy of the model.
     """
@@ -48,14 +51,32 @@ def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, m
         #Running function
         logging.debug("-> sess.run function")
         try:
-            loss = np.random.randint(0, 1000)
-            logit = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+            if sess is None:
+                loss = np.random.randint(0, 1000)
+                logits = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+            else:
+                loss, logits = sess.run(
+                        #Describe what we want out of the model
+                        [
+                            model_dict['loss'],
+                            model_dict['predict'],
+                        ],
+                        #Describe what we input in the model
+                        feed_dict = {
+                            model_dict['X_input']: X_batch,
+                            model_dict['y_input']: y_batch,
+                            model_dict['keepProb']: 1.,
+                            model_dict['learningRate']: parameter['LEARNING_RATE'],
+                            model_dict['isTraining']: False
+                        }
+                    )
         except Exception as e:
             logging.error("Tensorflow threw an error: {}".format(e))
+            sys.exit(69)
         logging.debug("<- sess.run function")
 
         #Majority-Voting
-        predict = np.argmax(logit, axis=1)
+        predict = np.argmax(logits, axis=1)
         predict = np.bincount(predict)
         predict = np.argmax(predict)
         actual = np.bincount(np.argmax(y_batch, axis=1)) #should return a random element which is equivalent to all elements #Do i need to change this / process this?
@@ -90,13 +111,29 @@ def test_model_accuracy(X, y, parameter, show_confusion_matrix, sess=None, model
     #We run the model
     logging.debug("-> sess.run function")
     #TODO: placeholders that are going to be replaced by the actual values
-    #TODO: place an exception handler anywhere we call tensorflow functions, such that we log these
     try:
-        loss = np.random.randint(0, 1000)
-        logits = np.random.rand(X.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+        if sess is None:
+            loss = np.random.randint(0, 1000)
+            logits = np.random.rand(X.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+        else:
+            loss, logits = sess.run(
+                    #Describe what we want out of the model
+                    [
+                        model_dict['loss'],
+                        model_dict['predict'],
+                    ],
+                    #Describe what we input in the model
+                    feed_dict = {
+                        model_dict['X_input']: X,
+                        model_dict['y_input']: y,
+                        model_dict['keepProb']: 1.,
+                        model_dict['learningRate']: parameter['LEARNING_RATE'],
+                        model_dict['isTraining']: False
+                    }
+                )
     except Exception as e:
         logging.error("Tensorflow threw an error: {}".format(e))
-
+        sys.exit(69)
     logging.debug("<- sess.run function")
 
     #Both reduced from one-hot to arg-vector
@@ -132,4 +169,19 @@ if __name__ == '__main__':
     parameter = {
         'BATCH_SIZE': 500
     }
-    test_model_accuracy_voting(X_pretrain, y_pretrain, parameter)
+
+    sess = None
+
+    W, b, model_dict, tmpval= init_graph()
+
+    init_op = tf.global_variables_initializer()
+
+    with tf.Session() as sess:
+        sess.run(init_op)
+
+        # acc = test_model_accuracy(X_pretrain, y_pretrain, parameter, show_confusion_matrix=False)
+        acc = test_model_accuracy_voting(X_pretrain, y_pretrain, parameter)
+
+        print("Accuracy is {}".format(acc*100))
+
+
