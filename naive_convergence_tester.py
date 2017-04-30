@@ -9,7 +9,7 @@ def main():
     dataLoader = DataLoader("datahandler/Datasets/Preprocessed/DB-a")
     X_train, y_train, X_test, y_test = dataLoader.get_odd_even_trials()
 
-    W, b, model_dict, tmpval= init_graph()
+    W, b, model_dict= init_graph()
 
     parameter = {
         'LEARNING_RATE': 0.1,

@@ -22,7 +22,7 @@ def init_graph():
     :return: The initized weights-dictionary, bias-dictionary and a model-dictionary that captures all input and output of the created graph.
     """
     logging.debug("-> {} function".format(init_graph.__name__))
-    W, b, global_step, tmpval = initialize_parameters()
+    W, b, global_step = initialize_parameters()
 
     (X_input,
      y_input,
@@ -47,7 +47,7 @@ def init_graph():
 
     logging.info("Model dictionary looks like: {}".format(model_dict))
     logging.debug("<- {} function".format(init_graph.__name__))
-    return W, b, model_dict, tmpval
+    return W, b, model_dict
 
 
 def initialize_parameters():
@@ -112,11 +112,8 @@ def initialize_parameters():
     logging.info("Weights are of shape: {}".format([(key, str(w.get_shape())) for key, w in Weights.iteritems()]))
     logging.info("bias are of shape: {}".format([(key, str(b.get_shape())) for key, b in Bias.iteritems()]))
 
-    tmpval = None
-    # tmpval = tf.get_variable("new_var", shape=[1], initializer=tf.constant_initializer(0.1))
-
     logging.debug("<- {} function".format(initialize_parameters.__name__))
-    return Weights, Bias, global_step, tmpval
+    return Weights, Bias, global_step
 
 
 def build_model(W, b, global_step):

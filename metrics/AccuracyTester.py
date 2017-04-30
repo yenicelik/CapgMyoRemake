@@ -108,6 +108,8 @@ def test_model_accuracy(X, y, parameter, show_confusion_matrix, sess=None, model
     """
     logging.debug("-> {} function".format(test_model_accuracy.__name__))
 
+    #TODO: Split up the data assuming it is bigger than just 1000 samples
+
     #We run the model
     logging.debug("-> sess.run function")
     #TODO: placeholders that are going to be replaced by the actual values
@@ -172,7 +174,7 @@ if __name__ == '__main__':
 
     sess = None
 
-    W, b, model_dict, tmpval= init_graph()
+    W, b, model_dict= init_graph()
 
     init_op = tf.global_variables_initializer()
 

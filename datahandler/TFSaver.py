@@ -91,7 +91,7 @@ if __name__ == '__main__':
     }
 
 
-    W, b, model_dict, tmpval = init_graph()
+    W, b, model_dict = init_graph()
     init_op = tf.global_variables_initializer()
 
     features = W.copy()
