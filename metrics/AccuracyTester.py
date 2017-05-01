@@ -51,6 +51,7 @@ def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, m
         logging.debug("-> sess.run function")
         try:
             if sess is None:
+                logging.debug("USING RANDOM")
                 loss = np.random.randint(0, 1000)
                 logits = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
             else:
@@ -87,7 +88,7 @@ def test_model_accuracy_voting(X, y, parameter, voting_window=1000, sess=None, m
         logging.error("predict_list length {} is not equal to actual_list length {}".format(len(predict_list), len(actual_list)))
 
     difference_vector = [1 if pred == act else 0 for pred, act in zip(predict_list, actual_list)]
-    accuracy = (np.sum(difference_vector) / float(len(predict_list)))
+    accuracy = (np.sum(difference_vector) / float(len(difference_vector)))
 
     logging.warning("Voting accuracy over {} frames is: {:.3f}%".format(voting_window, accuracy*100))
     logging.warning("Random baseline: {:.3f}%".format(1./10*100))
@@ -112,40 +113,51 @@ def test_model_accuracy(X, y, parameter, show_confusion_matrix, sess=None, model
     #We run the model
     logging.debug("-> sess.run function")
     #TODO: placeholders that are going to be replaced by the actual values
-    try:
-        if sess is None:
-            loss = np.random.randint(0, 1000)
-            logits = np.random.rand(X.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
-        else:
-            loss, logits = sess.run(
-                    #Describe what we want out of the model
-                    [
-                        model_dict['loss'],
-                        model_dict['predict'],
-                    ],
-                    #Describe what we input in the model
-                    feed_dict = {
-                        model_dict['X_input']: X,
-                        model_dict['y_input']: y,
-                        model_dict['keepProb']: 1.,
-                        model_dict['learningRate']: parameter['LEARNING_RATE'],
-                        model_dict['isTraining']: False
-                    }
-                )
-    except Exception as e:
-        logging.error("Tensorflow threw an error: {}".format(e))
-        sys.exit(69)
-    logging.debug("<- sess.run function")
+    epoch_done = False
+    batchLoader = BatchLoader(X, y, 1000, shuffle=False)
+    acc_list = []
+    epoch_done = False
 
-    #Both reduced from one-hot to arg-vector
-    predict = np.argmax(logits, axis=1)
-    actual = np.argmax(y, axis=1)
-    if len(predict) != len(actual):
-        logging.error("Predict length {} doesn't equal actualy length {}".format(len(predict), len(actual)))
-        sys.exit(69)
-    difference_vector = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
-    accuracy = np.sum(difference_vector) / float(len(difference_vector))
-    logging.info("Accuracy is: {:.3f}%".format(accuracy*100))
+    while not epoch_done:
+        X_batch, y_batch, epoch_done = batchLoader.load_batch()
+
+        try:
+            if sess is None:
+                loss = np.random.randint(0, 1000)
+                logits = np.random.rand(X.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
+            else:
+                loss, logits = sess.run(
+                        #Describe what we want out of the model
+                        [
+                            model_dict['loss'],
+                            model_dict['predict'],
+                        ],
+                        #Describe what we input in the model
+                        feed_dict = {
+                            model_dict['X_input']: X_batch,
+                            model_dict['y_input']: y_batch,
+                            model_dict['keepProb']: 1.,
+                            model_dict['learningRate']: parameter['LEARNING_RATE'],
+                            model_dict['isTraining']: False
+                        }
+                    )
+        except Exception as e:
+            logging.error("Tensorflow threw an error: {}".format(e))
+            sys.exit(69)
+        logging.debug("<- sess.run function")
+
+        #Both reduced from one-hot to arg-vector
+        predict = np.argmax(logits, axis=1)
+        actual = np.argmax(y_batch, axis=1)
+        if len(predict) != len(actual):
+            logging.error("Predict length {} doesn't equal actualy length {}".format(len(predict), len(actual)))
+            sys.exit(69)
+        difference_vector = [1 if pred == act else 0 for pred, act in zip(predict, actual)]
+        accuracy = np.sum(difference_vector) / float(len(difference_vector))
+        logging.debug("Accuracy so far is: {:.3f}%".format(sum(acc_list)/float(len(acc_list))*100))
+        acc_list.append(accuracy)
+
+    logging.info("Accuracy is: {:.3f}%".format(sum(acc_list)/float(len(acc_list))*100))
     logging.info("Random baseline: {:.3f}%".format(1./10*100))
 
     #Confusion Matrix

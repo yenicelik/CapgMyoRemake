@@ -78,6 +78,7 @@ def run_epoch(X, y, parameter, cur_epoch, sess=None, model_dict=None):
         logging.debug("-> sess.run function")
         try:
             if sess is None:
+                logging.debug("USING RANDOM")
                 loss = np.random.rand(y_batch.shape[0])
                 predict = np.random.rand(X_batch.shape[0], 10) #10 should be the total number of different classes. This should be a global variable maybe
             else:

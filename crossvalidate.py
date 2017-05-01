@@ -54,7 +54,7 @@ def crossvalidate_intrasession(parameter, dataLoader, is_voting):
         TfSaver = TFSaver(parameter['SAVE_DIR'], features)
 
         #Training
-        train(X_train[:1000], y_train[:1000], parameter, sess=sess, model_dict=model_dict, saverObj=TfSaver)
+        train(X_train, y_train, parameter, sess=sess, model_dict=model_dict, saverObj=TfSaver)
 
         if is_voting:
             logging.debug("Voting is used for accuracy testing")
