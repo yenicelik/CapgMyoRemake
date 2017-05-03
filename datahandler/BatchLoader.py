@@ -3,8 +3,6 @@ from __future__ import print_function
 import sys
 import numpy as np
 
-from DataLoader import DataLoader
-
 import logging
 logging = logging.getLogger(__name__)
 
@@ -47,8 +45,6 @@ class BatchLoader(object):
         """
         :return: A (random) batch of X with the corresponding labels y, and a signal wether one epoch has passed
         """
-        logging.debug("-> {} function".format(self.load_batch.__name__))
-
         outX = self.X_arr[self.batch_counter]
         outy = self.y_arr[self.batch_counter]
         epoch_passed = False
@@ -63,26 +59,7 @@ class BatchLoader(object):
             logging.debug("Epoch has passed in load_batch!")
             self.batch_counter = self.batch_counter % self.no_of_batches
 
-        logging.debug("<- {} function".format(self.load_batch.__name__))
         return outX, outy, epoch_passed
-
-
-if __name__ == '__main__':
-
-    dataLoader = DataLoader("Datasets/Preprocessed/DB-a")
-    X_pretrain, y_pretrain, cross_session_dataset = dataLoader.get_intra_session_dataset_given_sid_tid(1, 1)
-    batchLoader = BatchLoader(X_pretrain, y_pretrain, 1000, False)
-
-    i = 0
-    while True:
-        X, y, epochdone = batchLoader.load_batch()
-        if i % 1000 == 0:
-            print(i)
-        if epochdone:
-            print("epochdone")
-        i += 1
-
-
 
 
 
