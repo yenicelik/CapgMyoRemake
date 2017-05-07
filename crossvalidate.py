@@ -18,7 +18,7 @@ def crossvalidate_intrasession(fn_acc):
     parameter = {
         'LEARNING_RATE': 0.1,
         'NUM_EPOCHS': 28,
-        'BATCH_SIZE': 1000,
+        'BATCH_SIZE': 500,
         'SAVE_DIR': "saves/intrasession/model.ckpt",
         'LOAD_DIR': "" #"saves/intrasession/model.ckpt" #""
     }

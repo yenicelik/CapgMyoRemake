@@ -12,7 +12,7 @@ import logging
 logging = logging.getLogger(__name__)
 
 def test_model_accuracy_voting(X, y, parameter, sess, model):
-    batchLoder = BatchLoader(X, y, 1000, shuffle=False)
+    batchLoder = BatchLoader(X, y, 500, shuffle=False)
 
     predict_list = []
     actual_list = []
@@ -54,7 +54,7 @@ def test_model_accuracy_voting(X, y, parameter, sess, model):
 
 
 def test_model_accuracy(X, y, parameter, sess, model):
-    batchLoader = BatchLoader(X, y, 1000, shuffle=False)
+    batchLoader = BatchLoader(X, y, 500, shuffle=False)
 
     acc_list = []
     epoch_done = False
