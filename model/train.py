@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import tensorflow as tf
+import os
 
 from accuracy import *
 import logging
@@ -13,9 +14,13 @@ def train(X_train,
           cv_accuracy_function,
           parameter,
           sess,
-          model):
+          model,
+          saver=None,
+          savepath=""):
 
     trainLoader = BatchLoader(X_train, y_train, parameter['BATCH_SIZE'], shuffle=True)
+    if saver and savepath:
+        saver.save(sess, savepath)
 
     for epoch in range(parameter['NUM_EPOCHS']):
         print("Epoch: {}".format(epoch))
@@ -42,12 +47,15 @@ def train(X_train,
             train_acc_list.append(accuracy)
 
             if (trainLoader.batch_counter % 100 == 0):
-                    cv_accuracy = cv_accuracy_function(X_cv, y_cv, parameter, sess=sess, model=model)
-                    print("Train accuracy: {:.3f}".format(float(sum(train_acc_list))/len(train_acc_list)))
-                    logging.debug("Train accuracy: {:.3f}".format(float(sum(train_acc_list))/len(train_acc_list)))
-                    print("CV accuracy: {:.3f}".format(cv_accuracy))
-                    logging.debug("CV accuracy: {:.3f}".format(cv_accuracy))
-                    train_acc_list = []
+                cv_accuracy = cv_accuracy_function(X_cv, y_cv, parameter, sess=sess, model=model)
+                print("Train accuracy: {:.3f}".format(float(sum(train_acc_list))/len(train_acc_list)))
+                logging.debug("Train accuracy: {:.3f}".format(float(sum(train_acc_list))/len(train_acc_list)))
+                print("CV accuracy: {:.3f}".format(cv_accuracy))
+                logging.debug("CV accuracy: {:.3f}".format(cv_accuracy))
+                train_acc_list = []
+
+                if savepath and saver:
+                    saver.save(sess, savepath)
 
 
 def adapt_lr(epoch, para_lr):

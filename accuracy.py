@@ -36,11 +36,14 @@ def test_model_accuracy_voting(X, y, parameter, sess, model):
         )
 
         #Majority-Voting
-        predict = np.argmax(logits, axis=1)
+        predict = np.argmax(logits[0], axis=1)
         predict = np.bincount(predict)
         predict = np.argmax(predict)
-        actual = np.bincount(np.argmax(y_batch, axis=1))
+
+        actual = np.argmax(y_batch, axis=1)
+        actual = np.bincount(actual)
         actual = np.argmax(actual)
+
         predict_list.append(predict)
         actual_list.append(actual)
 
