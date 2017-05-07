@@ -25,9 +25,10 @@ class LocallyConnected_1x1(object):
 
         out = []
         for fid in range(self.nFilters): #fid is filter_id
-            tmp_spatial = tf.multiply(inputs, tf.reshape(self.weight[:,:, fid,:], tf.shape(inputs)))
+            #We don't have to account for reshaping; tensorflow does this automatically
+            tmp_spatial = tf.multiply(inputs, self.weight[:,:,fid,:])
             tmp_spatial = tf.reduce_sum(tmp_spatial, axis=3)
-            tmp_spatial = tf.reshape(self.bias[:,:, fid], tf.shape(tmp_spatial))
+            tmp_spatial += self.bias[:,:,fid]
             tmp_spatial = tf.reshape(tmp_spatial, shape=[-1, 16, 8, 1])
             out.append(tmp_spatial)
         inputs = tf.concat(out, axis=3) #should be last dimension in which we 'grow'

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28f5c851-9d10-40ed-a60d-9eb1dd61185d" name="Default" comment="Test cases for locally connected layer">
+    <list default="true" id="28f5c851-9d10-40ed-a60d-9eb1dd61185d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/accuracy.py" afterPath="$PROJECT_DIR$/accuracy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crossvalidate.py" afterPath="$PROJECT_DIR$/crossvalidate.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/LocallyConnected.py" afterPath="$PROJECT_DIR$/model/LocallyConnected.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/build_model.py" afterPath="$PROJECT_DIR$/model/build_model.py" />
     </list>
     <ignored path="CapgMyoRemake.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,7 +22,7 @@
     <SUITE FILE_PATH="coverage/CapgMyoRemake$LocallyConnected.coverage" NAME="LocallyConnected Coverage Results" MODIFIED="1494153971562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$train.coverage" NAME="train Coverage Results" MODIFIED="1493544671140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$Importer.coverage" NAME="Importer Coverage Results" MODIFIED="1493245713623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CapgMyoRemake$crossvalidate.coverage" NAME="crossvalidate Coverage Results" MODIFIED="1494143532309" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CapgMyoRemake$crossvalidate.coverage" NAME="crossvalidate Coverage Results" MODIFIED="1494154922373" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$Sampler.coverage" NAME="Sampler Coverage Results" MODIFIED="1493246278907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datahandler" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$BuildGraph_Conflict_.coverage" NAME="BuildGraph[Conflict] Coverage Results" MODIFIED="1493646937821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/CapgMyoRemake$naive_full_impl.coverage" NAME="naive_full_impl Coverage Results" MODIFIED="1493730664541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -56,10 +55,20 @@
         <entry file="file://$PROJECT_DIR$/crossvalidate.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
+              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BatchLoader.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/datahandler/BatchLoader.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -68,7 +77,7 @@
         <entry file="file://$PROJECT_DIR$/model/build_model.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+              <caret line="56" column="10" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="10" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -79,8 +88,8 @@
       <file leaf-file-name="LocallyConnected.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/LocallyConnected.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.989605">
-              <caret line="34" column="29" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.2910603">
+              <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -345,7 +354,7 @@
       <recent name="$PROJECT_DIR$/metrics" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.LocallyConnected">
+  <component name="RunManager" selected="Python.crossvalidate">
     <configuration default="false" name="crossvalidate" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -643,8 +652,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.LocallyConnected" />
-        <item index="1" class="java.lang.String" itemvalue="Python.crossvalidate" />
+        <item index="0" class="java.lang.String" itemvalue="Python.crossvalidate" />
+        <item index="1" class="java.lang.String" itemvalue="Python.LocallyConnected" />
         <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests in CapgMyoRemake" />
         <item index="3" class="java.lang.String" itemvalue="Python.CrossSubjectImporter" />
         <item index="4" class="java.lang.String" itemvalue="Python.naive_full_impl" />
@@ -854,7 +863,13 @@
       <option name="project" value="LOCAL" />
       <updated>1494142174066</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Test cases for locally connected layer">
+      <created>1494154074938</created>
+      <option name="number" value="00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1494154074938</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TodoView">
@@ -906,7 +921,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Saver and restorer implemented" />
     <MESSAGE value="Uploading first test on AlFRED" />
     <MESSAGE value="First full implementation. Need to check smaller variables/parameters, and also see if current implementation is correct." />
     <MESSAGE value="Confusion matrix implemented." />
@@ -931,7 +945,8 @@
     <MESSAGE value="The bug must be in the model, or tensorflow logic" />
     <MESSAGE value="First working model: 10 gestures intra-session 82%" />
     <MESSAGE value="Last tensorflow implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Last tensorflow implementation" />
+    <MESSAGE value="Test cases for locally connected layer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test cases for locally connected layer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1291,13 +1306,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datahandler/BatchLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.5555553">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/datahandler/CrossSubjectImporter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1360,20 +1368,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/build_model.py">
+    <entry file="file://$PROJECT_DIR$/crossvalidate.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/crossvalidate.py">
+    <entry file="file://$PROJECT_DIR$/datahandler/BatchLoader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/build_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="56" column="10" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="10" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
@@ -1382,8 +1398,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model/LocallyConnected.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.989605">
-          <caret line="34" column="29" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.2910603">
+          <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
