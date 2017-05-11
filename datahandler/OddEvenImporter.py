@@ -5,6 +5,7 @@ import sys
 import scipy.io as sio
 import matplotlib.pyplot as plt
 import numpy as np
+from config import *
 
 import logging
 # logging.basicConfig(filename='example.log', level=logging.DEBUG)
@@ -82,11 +83,13 @@ class OddEvenImporter(object):
             X = ele['data']
             #Turning into one-hot
             gesture = ele['gesture']
-            if gesture == 101:
+            if gesture == 101 and NUM_GESTURES == 10:
                 gesture = 10
-            if gesture == 100:
+            elif gesture == 100 and NUM_GESTURES == 10:
                 gesture = 9
-            y = np.zeros((X.shape[0], 10)) #10 dimensions in one-hot setting
+            elif gesture == 100 or gesture == 101:
+                continue
+            y = np.zeros((X.shape[0], NUM_GESTURES)) #10 dimensions in one-hot setting
             y[:,gesture-1] = 1
             #splitting array now again, feeling a little unconfident here, as off-by-one error are critical
             ys.append(y)
